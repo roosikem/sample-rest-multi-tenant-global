@@ -1,0 +1,49 @@
+package com.lkup.accounts.document;
+
+import com.lkup.accounts.dto.appId.AppIdDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Document("environments")
+public class Environment {
+
+    @Id
+    private String id;
+    private String name;
+
+    @DBRef
+    private List<APIKey> apiKeys;
+
+
+    @DBRef
+    private List<AppId> appIds;
+
+    private String hostUrl;
+    private String authTokenUrl;
+    private String defaultConfigTemplate;
+
+    private Organization organization;
+    private Team team;
+
+
+    @CreatedDate
+    private Date createdAt;
+    @LastModifiedDate
+    private Date updatedAt;
+    @Version
+    private Integer version;
+
+}

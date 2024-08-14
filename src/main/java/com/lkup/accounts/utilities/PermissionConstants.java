@@ -1,0 +1,40 @@
+package com.lkup.accounts.utilities;
+
+public class PermissionConstants {
+    public static final String CREATE_ENVIRONMENT = "CREATE_ENVIRONMENT";
+    public static final String UPDATE_ENVIRONMENT = "UPDATE_ENVIRONMENT";
+    public static final String DELETE_ENVIRONMENT = "DELETE_ENVIRONMENT";
+    public static final String VIEW_ENVIRONMENT = "VIEW_ENVIRONMENT";
+    public static final String CREATE_API_KEY = "CREATE_API_KEY";
+    public static final String UPDATE_API_KEY = "UPDATE_API_KEY";
+    public static final String DELETE_API_KEY = "DELETE_API_KEY";
+    public static final String VIEW_API_KEY = "VIEW_API_KEY";
+    public static final String CREATE_USER = "CREATE_USER";
+    public static final String UPDATE_USER = "UPDATE_USER";
+    public static final String DELETE_USER = "DELETE_USER";
+    public static final String VIEW_USER = "VIEW_USER";
+    public static final String CREATE_ROLE = "CREATE_ROLE";
+    public static final String UPDATE_ROLE = "UPDATE_ROLE";
+    public static final String DELETE_ROLE = "DELETE_ROLE";
+    public static final String VIEW_ROLE = "VIEW_ROLE";
+    public static final String CREATE_ORGANIZATION = "CREATE_ORGANIZATION";
+    public static final String UPDATE_ORGANIZATION = "UPDATE_ORGANIZATION";
+    public static final String DELETE_ORGANIZATION = "DELETE_ORGANIZATION";
+    public static final String VIEW_ORGANIZATION = "VIEW_ORGANIZATION";
+    public static final String CREATE_COUNTRY = "CREATE_COUNTRY";
+    public static final String UPDATE_COUNTRY = "UPDATE_COUNTRY";
+    public static final String DELETE_COUNTRY = "DELETE_COUNTRY";
+    public static final String VIEW_COUNTRY = "VIEW_COUNTRY";
+    public static final String CREATE_DEPLOYMENT = "CREATE_DEPLOYMENT";
+    public static final String UPDATE_DEPLOYMENT = "UPDATE_DEPLOYMENT";
+    public static final String DELETE_DEPLOYMENT = "DELETE_DEPLOYMENT";
+    public static final String VIEW_DEPLOYMENT = "VIEW_DEPLOYMENT";
+    public static final String CREATE_TEAM = "CREATE_TEAM";
+    public static final String UPDATE_TEAM = "UPDATE_TEAM";
+    public static final String DELETE_TEAM = "DELETE_TEAM";
+    public static final String VIEW_TEAM = "VIEW_TEAM";
+    public static final String ADMINISTRATOR = "*";
+    public static final String VIEW_CONFIGURATION = "VIEW_CONFIGURATION";
+    public static final String CREATE_CONFIGURATION = "CREATE_CONFIGURATION";
+    public static final String UPDATE_CONFIGURATION = "UPDATE_CONFIGURATION";
+}
