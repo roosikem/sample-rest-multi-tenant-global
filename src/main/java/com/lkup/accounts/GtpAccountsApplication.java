@@ -66,6 +66,8 @@ public class GtpAccountsApplication {
         return args -> {
 
 
+            if(false) {
+
 
             Country ie =  new Country(defaultUUIDGeneratorService.generateId(), "Ireland", "IE");
             countryRepository.deleteAll();
@@ -95,22 +97,24 @@ public class GtpAccountsApplication {
             role.setPermissions(Set.of(ADMINISTRATOR));
             roleRepository.save(role);
 
-            userRepository.deleteAll();
-            User root = new User();
-            root.setId(defaultUUIDGeneratorService.generateId());
-            root.setCountryAccess(List.of(ie));
-            root.setUsername(username);
-            root.setPassword(passwordEncoder.encode(password));
-            userRepository.save(root);
-
-            root.setRole(role);
-            userRepository.save(root);
 
 
             organizationService.deleteAll();
             OrganizationDto organizationDto = createOrganizationDto("**");
             Organization organizationDb =
                     organizationService.createOrganization(organizationMapper.convertDtoToOrganization(organizationDto));
+
+            userRepository.deleteAll();
+            User root = new User();
+            root.setId(defaultUUIDGeneratorService.generateId());
+            root.setCountryAccess(List.of(ie));
+            root.setUsername(username);
+            root.setPassword(passwordEncoder.encode(password));
+            root.setOrganization(organizationDb);
+            userRepository.save(root);
+
+            root.setRole(role);
+            userRepository.save(root);
 
             RequestInfo requestInfo = new RequestInfo(UUID.randomUUID().toString().replace("-", ""), null, organizationDb.getId());
             RequestContext.setRequestContext(requestInfo);
@@ -161,6 +165,7 @@ public class GtpAccountsApplication {
             System.out.println(teamDto.getId());
             System.out.println(organizationDto.getId());
             RequestContext.clearRequestContext();
+            }
         };
     }
 
@@ -176,8 +181,8 @@ public class GtpAccountsApplication {
         CreateEnvironmentDto environment = createEnvironment(environmentName, gatewayURL,tokenURL);
         environment.setId(UUID.randomUUID().toString());
         environment.setDefaultConfigTemplate(defaultConfig);
-        environment.setAppIds(appIds);
-        environment.setOrganizationDto(organizationDto);
+        environment.setAppIds(appIds.stream().map(AppIdDto::getId).toList());
+        environment.setOrganizationId(organizationDto.getId());
         return environment;
     }
 

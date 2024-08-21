@@ -11,7 +11,7 @@ import com.lkup.accounts.exceptions.BadRequestException;
 import com.lkup.accounts.exceptions.configuration.ConfigurationNotFoundException;
 import com.lkup.accounts.exceptions.configuration.ConfigurationServiceException;
 import com.lkup.accounts.repository.global.OrganizationRepository;
-import com.lkup.accounts.repository.tenant.TeamRepository;
+import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.custom.ConfigurationCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
 import com.lkup.accounts.utilities.ApplicationConstants;

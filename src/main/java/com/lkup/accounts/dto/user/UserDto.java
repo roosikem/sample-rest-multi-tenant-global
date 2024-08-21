@@ -2,6 +2,7 @@ package com.lkup.accounts.dto.user;
 
 import com.lkup.accounts.document.Team;
 import com.lkup.accounts.dto.role.RoleDto;
+import com.lkup.accounts.dto.team.TeamDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,4 +22,6 @@ public class UserDto {
     @LastModifiedDate
     private Date updatedAt;
     private RoleDto role;
+
+    private List<TeamDto> teams;
 }

@@ -54,10 +54,10 @@ public class EnvironmentMapper {
             environment.setName(createEnvironmentDto.getName());
         }
         if(createEnvironmentDto.getAppIds() != null) {
-            environment.setAppIds(appIdMapper.convertAPPIdsDtoToAppId(createEnvironmentDto.getAppIds()));
+            environment.setAppIds(appIdMapper.convertIdsToAppId(createEnvironmentDto.getAppIds()));
         }
-        if(null != createEnvironmentDto.getOrganizationDto() ) {
-            environment.setOrganization(organizationMapper.convertDtoToOrganization(createEnvironmentDto.getOrganizationDto()));
+        if(null != createEnvironmentDto.getOrganizationId() ) {
+            environment.setOrganization(organizationMapper.convertOrgIdToOrganization(createEnvironmentDto.getOrganizationId()));
         }
         return environment;
     }
@@ -89,6 +89,13 @@ public class EnvironmentMapper {
             environment.setName(updateEnvironmentDto.getName());
         }
         environment.setApiKeys(apiKeyMapper.convertIdsToAPIKeys(updateEnvironmentDto.getApiKeys()));
+
+        if(updateEnvironmentDto.getAppIds() != null) {
+            environment.setAppIds(appIdMapper.convertIdsToAppId(updateEnvironmentDto.getAppIds()));
+        }
+        if(null != updateEnvironmentDto.getOrganizationId() ) {
+            environment.setOrganization(organizationMapper.convertOrgIdToOrganization(updateEnvironmentDto.getOrganizationId()));
+        }
         return environment;
     }
 

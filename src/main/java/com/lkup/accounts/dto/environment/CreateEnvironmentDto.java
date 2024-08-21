@@ -6,6 +6,7 @@ import com.lkup.accounts.dto.organization.CreateOrganizationDto;
 import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.dto.apikey.APIKeyDto;
 import com.lkup.accounts.dto.appId.AppIdDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -16,18 +17,32 @@ import java.util.List;
 @Setter
 public class CreateEnvironmentDto {
     private String id;
+    @NotNull
+    @Schema(name = "Environment Name", example = "Dev", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
-    @JsonProperty("organization")
-    @Valid
-    @NotNull
-	private OrganizationDto organizationDto;
-    private List<APIKeyDto> apiKeys;
+    private List<String> apiKeys;
 
     @JsonProperty("appIds")
-    private List<AppIdDto> appIds;
+    @NotNull
+    @Schema(name = "App Ids", example = "[1234,34534]", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<e> appIds;
 
+    @Schema(name = "App Ids", example = "https://host.com/dev")
     private String hostUrl;
+
+    @Schema(name = "App Ids", example = "https://auth.com/dev")
     private String authTokenUrl;
+
+    @Schema(name = "Default Config Template", example = "{}")
     private String defaultConfigTemplate;
+
+    @NotNull
+    @Schema(name = "Environment Type", example = "DEV, QA, PROD, SANDBOX, STAGING", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String environmentType;
+
+    @JsonProperty("organization")
+    @NotNull
+    @Schema(name = "Organization ID", example = "567899SD", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String organizationId;
 }

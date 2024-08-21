@@ -1,7 +1,6 @@
 package com.lkup.accounts.config.database;
 
 import com.lkup.accounts.context.RequestContext;
-import com.lkup.accounts.context.RequestInfo;
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
@@ -15,9 +14,6 @@ import org.springframework.data.mongodb.SessionAwareMethodInterceptor;
 import org.springframework.data.mongodb.core.MongoExceptionTranslator;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
-import com.lkup.accounts.config.TenantContext;
-
-import java.util.Objects;
 
 public class MultiTenantMongoDatabaseFactory implements MongoDatabaseFactory {
 

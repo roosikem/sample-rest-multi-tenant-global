@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -48,6 +49,8 @@ public class User implements UserDetails {
 
     @DBRef
     private List<Team> teams;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getGrantedAuthorities();

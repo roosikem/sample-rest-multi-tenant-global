@@ -11,7 +11,7 @@ import com.lkup.accounts.exceptions.environment.EnvironmentServiceException;
 import com.lkup.accounts.exceptions.organization.OrganizationNotFoundException;
 import com.lkup.accounts.exceptions.team.TeamNotFoundException;
 import com.lkup.accounts.repository.global.OrganizationRepository;
-import com.lkup.accounts.repository.tenant.TeamRepository;
+import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.custom.APPIdCustomRepository;
 import com.lkup.accounts.repository.custom.EnvironmentCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
@@ -55,8 +55,8 @@ public class EnvironmentService {
             Organization organization = organizationRepository.findById(environment.getOrganization().getId())
                     .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + environment.getOrganization().getId() + " not found"));
             environment.setOrganization(organization);
-
-            Team team = teamRepository.findTeamById(RequestContext.getRequestContext().getTeamId()).orElseThrow(() -> new TeamNotFoundException("Team not found with id "+ RequestContext.getRequestContext().getTeamId()));
+           String teamId =  RequestContext.getRequestContext().getTeamId();
+            Team team = teamRepository.findTeamById(teamId).orElseThrow(() -> new TeamNotFoundException("Team not found with id "+ RequestContext.getRequestContext().getTeamId()));
             Optional<Environment> existingEnv  = environmentRepository.findByName(queryCriteria, environment.getName());
             if(existingEnv.isPresent()) {
                 throw new BadRequestException("Environment already exists with name "+environment.getName());
@@ -128,6 +128,11 @@ public class EnvironmentService {
                 Optional<List<AppId>> dbAppIds =  appIdRepository.findByIds(queryCriteria, appIds);
                 dbAppIds.ifPresent(existingEnvironment::setAppIds);
             }
+
+            Optional.ofNullable(environment.getEnvironmentType()).ifPresent(existingEnvironment::setEnvironmentType);
+            Optional.ofNullable(environment.getHostUrl()).ifPresent(existingEnvironment::setHostUrl);
+            Optional.ofNullable(environment.getAuthTokenUrl()).ifPresent(existingEnvironment::setAuthTokenUrl);
+            Optional.ofNullable(environment.getDefaultConfigTemplate()).ifPresent(existingEnvironment::setDefaultConfigTemplate);
 
             return Optional.of(environmentRepository.save(existingEnvironment));
         } else {

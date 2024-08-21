@@ -11,6 +11,9 @@ import com.lkup.accounts.dto.user.UserDto;
 import com.lkup.accounts.dto.user.UserTeamsDto;
 import com.lkup.accounts.service.OrganizationService;
 import com.lkup.accounts.service.RoleService;
+import com.lkup.accounts.service.TeamService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,10 +24,15 @@ import java.util.Optional;
 public class UserMapper {
     private final OrganizationService organizationService;
     private final RoleService roleService;
+    private final ModelMapper modelMapper;
+    private final TeamService teamService;
 
-    public UserMapper(OrganizationService organizationService, RoleService roleService) {
+    public UserMapper(ModelMapper modelMapper, OrganizationService organizationService, RoleService roleService,
+                      TeamService teamService) {
         this.roleService = roleService;
         this.organizationService = organizationService;
+        this.modelMapper = modelMapper;
+        this.teamService = teamService;
     }
 
     public UserTeamsDto convertUserToDto(User user) {
@@ -69,13 +77,7 @@ public class UserMapper {
 
         List<Team> teams = user.getTeams();
         if (teams != null && !teams.isEmpty()) {
-            List<String> teamNames = new ArrayList<>();
-            for (Team team : teams) {
-                if (team.getName() != null) {
-                    teamNames.add(team.getName());
-                }
-            }
-            userDto.setTeams(teamNames);
+            userDto.setTeams(modelMapper.map(teams, new TypeToken<List<TeamDto>>() {}.getType()));
         }
 
         if(user.getRole() != null){
@@ -113,19 +115,12 @@ public class UserMapper {
 
         if (createUserDto.getOrganization() != null) {
             Optional<Organization> organization = organizationService.findOrganizationById(createUserDto.getOrganization());
-            if (organization.isPresent()) {
-                user.setOrganization(organization.get());
-            }
+            organization.ifPresent(user::setOrganization);
         }
 
         if (createUserDto.getRoleId() != null) {
             Optional<Role> role = roleService.findRoleById(createUserDto.getRoleId());
-            if (role.isEmpty()) {
-                role = roleService.findRoleById("bbc412cb-b430-47f1-8010-6ad4a27a0237");
-            }
-            if (role.isPresent()) {
-                user.setRole(role.get());
-            }
+            role.ifPresent(user::setRole);
         }
         return user;
     }
@@ -162,6 +157,18 @@ public class UserMapper {
             if (organization.isPresent()) {
                 user.setOrganization(organization.get());
             }
+        }
+
+        if (updateUserRequestDto.getTeams() != null) {
+            List<Team> teams = new ArrayList<>();
+            for(String teamId : updateUserRequestDto.getTeams() ) {
+                Optional<Team> teamDb = teamService.findTeamById(teamId);
+                if(teamDb.isPresent()) {
+                    teams.add(teamDb.get());
+                }
+
+            }
+            user.setTeams(teams);
         }
 
         return user;

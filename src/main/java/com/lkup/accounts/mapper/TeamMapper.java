@@ -72,15 +72,6 @@ public class TeamMapper {
             team.setBusinessService(teamDto.getBusinessService());
         }
 
-        if (teamDto.getUsers() != null) {
-            List<String> userIds = teamDto.getUsers().stream()
-                    .map(UserTeamsDto::getId)
-                    .collect(Collectors.toList());
-
-            List<User> users = userRepository.findAllById(userIds);
-            team.setUsers(users);
-        }
-
         if (teamDto.getOrganization() != null && teamDto.getOrganization().getName() != null) {
             Organization organization = organizationRepository.findByName(teamDto.getOrganization().getName()).orElse(null);
             team.setOrganization(organization);
@@ -144,13 +135,6 @@ public class TeamMapper {
         }
         if (team.getUpdatedAt() != null) {
             teamDto.setUpdatedAt(team.getUpdatedAt());
-        }
-
-        if (team.getUsers() != null) {
-            List<UserTeamsDto> userDtos = team.getUsers().stream()
-                    .map(userMapper::convertUserToDto)
-                    .collect(Collectors.toList());
-            teamDto.setUsers(userDtos);
         }
 
         if (team.getOrganization() != null) {

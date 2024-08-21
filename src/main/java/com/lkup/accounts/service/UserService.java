@@ -1,6 +1,7 @@
 package com.lkup.accounts.service;
 
 import com.lkup.accounts.document.Role;
+import com.lkup.accounts.document.Team;
 import com.lkup.accounts.document.User;
 import com.lkup.accounts.exceptions.user.UserNotFoundException;
 import com.lkup.accounts.exceptions.user.UserServiceException;
@@ -48,6 +49,12 @@ public class UserService {
 
 
     public Optional<User> findUserById(String id) {
+        Optional<User> user = userRepository.findUserById(id);
+        List<Team> teams = user.get().getTeams();
+        for(Team t: teams) {
+            String n = t.getName();
+            System.out.println(n);
+        }
         return userRepository.findUserById(id);
     }
 

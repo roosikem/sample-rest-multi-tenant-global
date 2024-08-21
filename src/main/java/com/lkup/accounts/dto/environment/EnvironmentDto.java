@@ -18,7 +18,7 @@ public class EnvironmentDto {
     private String hostUrl;
     private String authTokenUrl;
     private String defaultConfigTemplate;
-
+    private String environmentType;
     @JsonBackReference
     private OrganizationDto organizationDto;
 }

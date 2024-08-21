@@ -38,6 +38,7 @@ public class Environment {
     private Organization organization;
     private Team team;
 
+    private String environmentType;
 
     @CreatedDate
     private Date createdAt;

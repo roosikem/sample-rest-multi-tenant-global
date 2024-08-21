@@ -15,4 +15,5 @@ public class CreateUpdateAppIdDto {
     private String name;
     private String appId;
     private String description;
+    private String organization;
 }

@@ -1,4 +1,4 @@
-package com.lkup.accounts.repository.tenant;
+package com.lkup.accounts.repository.global;
 
 import com.lkup.accounts.document.Team;
 import org.springframework.data.mongodb.repository.MongoRepository;

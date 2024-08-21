@@ -32,14 +32,4 @@ public class GlobalMongoConfig {
         MongoClient mongoClient = globalMongoClient();
         return new MongoTemplate(mongoClient, globalMongoDb);
     }
-
-    private boolean databaseExists(MongoClient mongoClient, String databaseName) {
-        MongoIterable<String> databases = mongoClient.listDatabaseNames();
-        for (String dbName : databases) {
-            if (dbName.equalsIgnoreCase(databaseName)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

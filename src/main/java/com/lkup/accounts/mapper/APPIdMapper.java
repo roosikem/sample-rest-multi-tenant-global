@@ -54,4 +54,16 @@ public class APPIdMapper {
         }
         return appIdsList;
     }
+
+    public List<AppId> convertIdsToAppId(List<String> appIds) {
+        List<AppId> appIdsList = new ArrayList<>();
+        if (appIds != null) {
+            for (String appId : appIds) {
+                AppId appIdDoc = new AppId();
+                appIdDoc.setId(appId);
+                appIdsList.add(appIdDoc);
+            }
+        }
+        return appIdsList;
+    }
 }

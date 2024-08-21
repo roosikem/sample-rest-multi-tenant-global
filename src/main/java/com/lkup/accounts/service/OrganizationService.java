@@ -4,7 +4,7 @@ import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.exceptions.organization.OrganizationNotFoundException;
 import com.lkup.accounts.exceptions.organization.OrganizationServiceException;
 import com.lkup.accounts.repository.global.OrganizationRepository;
-import com.lkup.accounts.repository.tenant.TeamRepository;
+import com.lkup.accounts.repository.global.TeamRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -20,15 +20,16 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
     @Autowired
     MongoTemplate mongoTemplate;
 
+    @Qualifier("globalMongoTemplate")
+    @Autowired
+    MongoTemplate globalMongoTemplate;
+
     @Override
     public Optional<AppId> validateExisting(QueryCriteria queryCriteria, String name, String appId) {
         Query query = new Query();
-        Criteria andCriteria = Criteria.where("organization.id").is(queryCriteria.getTenantId()).and("team.id").is(queryCriteria.getTeamId());
-        Criteria orCriteria = new Criteria().orOperator(
-               Criteria.where("name").is(name), Criteria.where("appId").is(appId));
-        Criteria finalCriteria = new Criteria().andOperator(andCriteria, orCriteria);
-        query.addCriteria(finalCriteria);
-        List<AppId> appIds =  mongoTemplate.find(query, AppId.class);
+        Criteria orCriteria = new Criteria().orOperator( Criteria.where("appId").is(appId));
+        query.addCriteria(orCriteria);
+        List<AppId> appIds =  globalMongoTemplate.find(query, AppId.class);
         if(!appIds.isEmpty())
            return Optional.ofNullable(appIds.get(0));
         return Optional.empty();
@@ -37,18 +38,16 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
     @Override
     public Optional<AppId> findByName(QueryCriteria queryCriteria, String name) {
         Criteria criteria = new Criteria().andOperator(
-                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
-                Criteria.where("team.id").is(queryCriteria.getTeamId()),
                 Criteria.where("name").is(name)
         );
         Query query = new Query(criteria);
-        AppId appIds = mongoTemplate.findOne(query, AppId.class);
+        AppId appIds = globalMongoTemplate.findOne(query, AppId.class);
         return Optional.ofNullable(appIds);
     }
 
     @Override
     public <S extends AppId> S save(S entity) {
-       return mongoTemplate.save(entity);
+       return globalMongoTemplate.save(entity);
     }
 
     @Override
@@ -59,23 +58,17 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
     @Override
     public Optional<AppId> findById(QueryCriteria queryCriteria, String id) {
         Criteria criteria = new Criteria().andOperator(
-                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
-                Criteria.where("team.id").is(queryCriteria.getTeamId()),
                 Criteria.where("id").is(id)
         );
         Query query = new Query(criteria);
-        AppId appId = mongoTemplate.findOne(query, AppId.class);
+        AppId appId = globalMongoTemplate.findOne(query, AppId.class);
         return Optional.ofNullable(appId);
     }
 
     @Override
     public long countAll(QueryCriteria queryCriteria) {
-        Criteria criteria = new Criteria().andOperator(
-                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
-                Criteria.where("team.id").is(queryCriteria.getTeamId())
-        );
-        Query query = new Query(criteria);
-        return mongoTemplate.count(query, AppId.class);
+        Query query = new Query();
+        return globalMongoTemplate.count(query, AppId.class);
     }
 
     @Override
@@ -85,32 +78,23 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
 
     @Override
     public List<AppId> findAllAppIds(QueryCriteria queryCriteria) {
-        Criteria criteria = new Criteria().andOperator(
-                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
-                Criteria.where("team.id").is(queryCriteria.getTeamId())
-        );
-        Query query = new Query(criteria);
-        return mongoTemplate.find(query, AppId.class);
+        Query query = new Query();
+        return globalMongoTemplate.find(query, AppId.class);
     }
 
     @Override
     public Optional<List<AppId>> findByIds(QueryCriteria queryCriteria, List<String> ids) {
         Criteria criteria = new Criteria().andOperator(
-                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
-                Criteria.where("team.id").is(queryCriteria.getTeamId()),
                 Criteria.where("id").in(ids)
         );
         Query query = new Query(criteria);
-        return Optional.of(mongoTemplate.find(query, AppId.class));
+        return Optional.of(globalMongoTemplate.find(query, AppId.class));
     }
 
     @Override
     public void deleteAll(QueryCriteria queryCriteria) {
-        Criteria criteria = new Criteria().andOperator(
-                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
-                Criteria.where("team.id").is(queryCriteria.getTeamId())
-        );
-        Query query = new Query(criteria);
-        mongoTemplate.findAllAndRemove(query, AppId.class);
+
+        Query query = new Query();
+        globalMongoTemplate.findAllAndRemove(query, AppId.class);
     }
 }

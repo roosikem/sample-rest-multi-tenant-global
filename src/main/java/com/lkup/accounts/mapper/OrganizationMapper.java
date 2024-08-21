@@ -7,7 +7,9 @@ import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.dto.organization.UpdateOrganizationDto;
 import com.lkup.accounts.dto.team.TeamDto;
 import com.lkup.accounts.repository.global.CountryRepository;
-import com.lkup.accounts.repository.tenant.TeamRepository;
+import com.lkup.accounts.repository.global.TeamRepository;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Normalized;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -147,5 +149,15 @@ public class OrganizationMapper {
             }
         }
         return organizationDtos;
+    }
+
+    public Organization convertOrgIdToOrganization(@NotNull String orgId) {
+        if (orgId == null) {
+            return null;
+        }
+
+        Organization organization = new Organization();
+        organization.setId(orgId);
+        return organization;
     }
 }

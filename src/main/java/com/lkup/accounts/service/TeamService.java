@@ -4,7 +4,7 @@ import com.lkup.accounts.document.Team;
 import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.exceptions.organization.OrganizationNotFoundException;
 import com.lkup.accounts.exceptions.team.TeamNotFoundException;
-import com.lkup.accounts.repository.tenant.TeamRepository;
+import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.global.UserRepository;
 import com.lkup.accounts.repository.global.OrganizationRepository;
 import org.slf4j.Logger;
