@@ -39,4 +39,9 @@ public class UpdateEnvironmentDto {
     @NotNull
     @Schema(name = "Organization ID", example = "567899SD", requiredMode = Schema.RequiredMode.REQUIRED)
     private String organizationId;
+
+    @JsonProperty("team")
+    @NotNull
+    @Schema(name = "Team ID", example = "567899SD", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String teamId;
 }

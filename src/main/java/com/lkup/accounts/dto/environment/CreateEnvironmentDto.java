@@ -26,7 +26,7 @@ public class CreateEnvironmentDto {
     @JsonProperty("appIds")
     @NotNull
     @Schema(name = "App Ids", example = "[1234,34534]", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<e> appIds;
+    private List<String> appIds;
 
     @Schema(name = "App Ids", example = "https://host.com/dev")
     private String hostUrl;
@@ -45,4 +45,9 @@ public class CreateEnvironmentDto {
     @NotNull
     @Schema(name = "Organization ID", example = "567899SD", requiredMode = Schema.RequiredMode.REQUIRED)
     private String organizationId;
+
+    @JsonProperty("team")
+    @NotNull
+    @Schema(name = "Team ID", example = "567899SD", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String teamId;
 }

@@ -2,16 +2,20 @@ package com.lkup.accounts.mapper;
 
 import com.lkup.accounts.document.APIKey;
 import com.lkup.accounts.document.AppId;
+import com.lkup.accounts.document.Team;
 import com.lkup.accounts.dto.apikey.APIKeyDto;
 import com.lkup.accounts.dto.apikey.CreateAPIKeyDto;
 import com.lkup.accounts.dto.appId.AppIdDto;
 import com.lkup.accounts.dto.appId.CreateUpdateAppIdDto;
+import com.lkup.accounts.repository.global.TeamRepository;
+import com.lkup.accounts.service.TeamService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -20,8 +24,18 @@ public class APPIdMapper {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private TeamService teamService;
+
     public AppId convertCreateDtoToAPPIdEntity(CreateUpdateAppIdDto createUpdateAppIdDto) {
-            return modelMapper.map(createUpdateAppIdDto, AppId.class);
+        AppId appId = modelMapper.map(createUpdateAppIdDto, AppId.class);
+        if(null != createUpdateAppIdDto.getTeam()) {
+           Optional<Team> team = teamService.findTeamById(createUpdateAppIdDto.getTeam());
+           if(team.isPresent()) {
+               appId.setTeam(team.get());
+           }
+        }
+        return modelMapper.map(createUpdateAppIdDto, AppId.class);
     }
 
     public CreateUpdateAppIdDto convertAppIdToCreateUpdateDto(AppId appId) {

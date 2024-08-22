@@ -75,4 +75,10 @@ public class EnvironmentController {
     public ResponseEntity<Long> getTotalEnvironments() {
         return ResponseEntity.ok(environmentService.getTotalEnvironments());
     }
+
+    @GetMapping("/{teamId}/total")
+    @PreAuthorize("hasAnyAuthority('" + PermissionConstants.ADMINISTRATOR + "', '" + PermissionConstants.VIEW_ENVIRONMENT + "', '" + PermissionConstants.CREATE_ENVIRONMENT + "')")
+    public ResponseEntity<Long> getTotalEnvironmentsByTeam(@PathVariable("teamId") String teamId) {
+        return ResponseEntity.ok(environmentService.getTotalEnvironments());
+    }
 }

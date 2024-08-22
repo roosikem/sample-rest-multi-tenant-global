@@ -6,5 +6,6 @@ public class AwsConstant {
     public static final String SANDBOX = "sandbox";
     public static final String PRODUCTION = "production";
     public static final String CONFIG = "config";
+    public static final String QA = "QA";
 
 }

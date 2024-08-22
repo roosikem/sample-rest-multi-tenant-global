@@ -14,4 +14,6 @@ public class ApplicationConstants {
     public static final String QA_KEY_2 = "QA_KEY_2";
     public static final String DEV_URL = "DEV_URL";
     public static final String QA_URL = "QA_URL";
+    public static final String PUBLISHED_STATUS = "Published";
+    public static final String DRAFT_STATUS = "Draft";
 }

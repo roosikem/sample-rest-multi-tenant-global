@@ -15,6 +15,7 @@ import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.custom.APPIdCustomRepository;
 import com.lkup.accounts.repository.custom.EnvironmentCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
+import com.lkup.accounts.utilities.RoleChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,11 @@ public class EnvironmentService {
     private final OrganizationRepository organizationRepository;
     private final APPIdCustomRepository appIdRepository;
     private final TeamRepository teamRepository;
+    private final RoleChecker roleChecker;
 
-    public EnvironmentService(EnvironmentCustomRepository environmentRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
+    public EnvironmentService(RoleChecker roleChecker, EnvironmentCustomRepository environmentRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
                               OrganizationRepository organizationRepository, APPIdCustomRepository appIdRepository, TeamRepository teamRepository) {
+        this.roleChecker = roleChecker;
         this.environmentRepository = environmentRepository;
         this.defaultUUIDGenerator = defaultUUIDGenerator;
         this.organizationRepository = organizationRepository;
@@ -46,31 +49,48 @@ public class EnvironmentService {
     public Environment createEnvironment(Environment environment) {
         Objects.requireNonNull(environment);
         Objects.requireNonNull(environment.getOrganization());
+        Objects.requireNonNull(environment.getOrganization().getId());
+        Objects.requireNonNull(environment.getTeam().getId());
         environment.setId(defaultUUIDGenerator.generateId());
         try {
+            String requestTenantId = null;
+            String requestTeamId = null;
+            if (!roleChecker.hasSuperAdminRole()) {
+                requestTenantId = RequestContext.getRequestContext().getTenantId();
+                requestTeamId = RequestContext.getRequestContext().getTeamId();
+
+                if (!requestTeamId.equals(environment.getTeam().getId())) {
+                    throw new BadRequestException("Invalid Team ID. Team ID should match the team ID in request");
+                }
+                if (!requestTenantId.equals(environment.getOrganization().getId())) {
+                    throw new BadRequestException("Invalid Tenant ID. Tenant ID should match the tenant ID in request");
+                }
+            } else {
+                requestTenantId = environment.getOrganization().getId();
+                requestTeamId = environment.getTeam().getId();
+            }
+
             QueryCriteria queryCriteria = new QueryCriteria();
-            queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-            queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
+            queryCriteria.setTenantId(requestTenantId);
+            queryCriteria.setTeamId(requestTeamId);
 
             Organization organization = organizationRepository.findById(environment.getOrganization().getId())
                     .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + environment.getOrganization().getId() + " not found"));
             environment.setOrganization(organization);
-           String teamId =  RequestContext.getRequestContext().getTeamId();
-            Team team = teamRepository.findTeamById(teamId).orElseThrow(() -> new TeamNotFoundException("Team not found with id "+ RequestContext.getRequestContext().getTeamId()));
-            Optional<Environment> existingEnv  = environmentRepository.findByName(queryCriteria, environment.getName());
-            if(existingEnv.isPresent()) {
-                throw new BadRequestException("Environment already exists with name "+environment.getName());
+            Team team = teamRepository.findByIdAndOrganizationId(requestTeamId, requestTenantId).orElseThrow(() -> new TeamNotFoundException("Team not found with id " + RequestContext.getRequestContext().getTeamId()));
+            Optional<Environment> existingEnv = environmentRepository.findByName(queryCriteria, environment.getName());
+            if (existingEnv.isPresent()) {
+                throw new BadRequestException("Environment already exists with name " + environment.getName());
             }
-
             environment.setTeam(team);
-
-            if(environment.getAppIds() != null) {
-               List<String> appIds = environment.getAppIds().stream().map(AppId::getId).filter(id -> !id.isEmpty()).toList();
-
-               Optional<List<AppId>> dbAppIds =  appIdRepository.findByIds(queryCriteria, appIds);
-               dbAppIds.ifPresent(environment::setAppIds);
+            if (environment.getAppIds() != null) {
+                List<String> appIds = environment.getAppIds().stream().map(AppId::getId).filter(id -> !id.isEmpty()).toList();
+                Optional<List<AppId>> dbAppIds = appIdRepository.findByIds(queryCriteria, appIds);
+                if(!dbAppIds.isPresent() || dbAppIds.get().isEmpty()) {
+                    throw new BadRequestException("Wrong Appids ");
+                }
+                dbAppIds.ifPresent(environment::setAppIds);
             }
-
             return environmentRepository.save(environment);
         } catch (Exception e) {
             logger.error("Error creating Environment", e);
@@ -101,9 +121,30 @@ public class EnvironmentService {
 
     public Optional<Environment> updateEnvironment(Environment environment) {
         Assert.notNull(environment.getId(), "Environment ID cannot be null for update");
+        Objects.requireNonNull(environment);
+        Objects.requireNonNull(environment.getOrganization());
+        Objects.requireNonNull(environment.getOrganization().getId());
+        Objects.requireNonNull(environment.getTeam().getId());
+        String requestTenantId = null;
+        String requestTeamId = null;
+        if (!roleChecker.hasSuperAdminRole()) {
+            requestTenantId = RequestContext.getRequestContext().getTenantId();
+            requestTeamId = RequestContext.getRequestContext().getTeamId();
+
+            if (!requestTeamId.equals(environment.getTeam().getId())) {
+                throw new BadRequestException("Invalid Team ID. Team ID should match the team ID in request");
+            }
+            if (!requestTenantId.equals(environment.getOrganization().getId())) {
+                throw new BadRequestException("Invalid Tenant ID. Tenant ID should match the tenant ID in request");
+            }
+        } else {
+            requestTenantId = environment.getOrganization().getId();
+            requestTeamId = environment.getTeam().getId();
+        }
+
         QueryCriteria queryCriteria = new QueryCriteria();
-        queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-        queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
+        queryCriteria.setTenantId(requestTenantId);
+        queryCriteria.setTeamId(requestTeamId);
         Optional<Environment> existingEnvironmentOptional = environmentRepository.findById(queryCriteria, environment.getId());
 
         if (existingEnvironmentOptional.isPresent()) {
@@ -113,19 +154,19 @@ public class EnvironmentService {
                 existingEnvironment.setName(environment.getName());
             }
 
-            if(environment.getApiKeys() != null) {
+            if (environment.getApiKeys() != null) {
                 existingEnvironment.setApiKeys(environment.getApiKeys());
             }
 
-            if(environment.getOrganization() != null) {
+            if (environment.getOrganization() != null) {
                 Organization organization = organizationRepository.findById(environment.getOrganization().getId())
                         .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + environment.getOrganization().getId() + " not found"));
                 existingEnvironment.setOrganization(organization);
             }
 
-            if(environment.getAppIds() != null) {
+            if (environment.getAppIds() != null) {
                 List<String> appIds = environment.getAppIds().stream().map(AppId::getId).toList();
-                Optional<List<AppId>> dbAppIds =  appIdRepository.findByIds(queryCriteria, appIds);
+                Optional<List<AppId>> dbAppIds = appIdRepository.findByIds(queryCriteria, appIds);
                 dbAppIds.ifPresent(existingEnvironment::setAppIds);
             }
 

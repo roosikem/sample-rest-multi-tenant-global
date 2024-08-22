@@ -1,12 +1,17 @@
 package com.lkup.accounts.context;
 
 import com.lkup.accounts.document.Organization;
+import com.lkup.accounts.document.Team;
 import com.lkup.accounts.document.User;
 import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.exceptions.BadRequestException;
 import com.lkup.accounts.exceptions.InvalidTeamIdException;
 import com.lkup.accounts.exceptions.InvalidTenantIdException;
 import com.lkup.accounts.service.OrganizationService;
+import com.lkup.accounts.service.TeamService;
+import com.lkup.accounts.utilities.PermissionConstants;
+import com.lkup.accounts.utilities.RoleChecker;
+import com.lkup.accounts.utilities.RoleConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
@@ -23,32 +28,46 @@ import java.util.UUID;
 @Component
 @Order(2)
 public class RequestHandlerInterceptor implements HandlerInterceptor {
-    private static final String TENANT_ID = "**";
     private final OrganizationService organizationService;
+    private final RoleChecker roleChecker;
+    private final TeamService teamService;
 
-    RequestHandlerInterceptor(OrganizationService organizationService) {
+    RequestHandlerInterceptor(RoleChecker roleChecker, OrganizationService organizationService, TeamService teamService) {
         this.organizationService = organizationService;
+        this.roleChecker = roleChecker;
+        this.teamService = teamService;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String teamId = request.getHeader("X-TeamId");
         String tenantId = request.getHeader("X-TenantId");
-        if(Objects.isNull(tenantId))
-            throw new InvalidTenantIdException("tenantId is missing");
-        if(Objects.isNull(teamId)) {
-            throw new InvalidTeamIdException("Team Id is missing");
-        }
-        Optional<Organization> organization = organizationService.findOrganizationById(tenantId);
+        if(!roleChecker.hasSuperAdminRole()) {
+            if(Objects.isNull(tenantId))
+                throw new InvalidTenantIdException("tenantId is missing");
+            if(Objects.isNull(teamId)) {
+                throw new InvalidTeamIdException("Team Id is missing");
+            }
 
-        if(!organization.isPresent())
-            throw new InvalidTenantIdException("invalid tenant id");
+            User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(!principal.getOrganization().getId().equalsIgnoreCase(tenantId)) {
+                throw new InvalidTenantIdException("User is not authorized for this action.");
+            }
 
-        User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!principal.getOrganization().getId().equalsIgnoreCase(organization.get().getId())) {
-            throw new InvalidTenantIdException("invalid tenant id");
+            Optional<Organization> organization = organizationService.findOrganizationById(tenantId);
+            if(!organization.isPresent())
+                throw new InvalidTenantIdException("invalid tenant id");
+
+            if(!roleChecker.hasUserTeamAccess(teamId)) {
+                throw new InvalidTenantIdException("User is not authorized for this action.");
+            }
+            Optional<Team> team = teamService.findTeamById(teamId);
+            if(!team.isPresent())
+                throw new InvalidTenantIdException("invalid team id");
         }
-        RequestInfo requestInfo = new RequestInfo(UUID.randomUUID().toString().replace("-", ""), teamId, tenantId);
+
+        RequestInfo requestInfo = null;
+        requestInfo = new RequestInfo(UUID.randomUUID().toString().replace("-", ""), teamId, tenantId);
         RequestContext.setRequestContext(requestInfo);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);

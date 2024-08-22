@@ -2,6 +2,7 @@ package com.lkup.accounts.document;
 
 import com.lkup.accounts.dto.appId.AppIdDto;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,6 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Document("environments")
 public class Environment {
 

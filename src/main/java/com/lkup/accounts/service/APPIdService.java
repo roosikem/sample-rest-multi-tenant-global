@@ -7,12 +7,14 @@ import com.lkup.accounts.exceptions.apikey.APIKeyNotFoundException;
 import com.lkup.accounts.exceptions.apikey.APIKeyServiceException;
 import com.lkup.accounts.repository.custom.APPIdCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
+import com.lkup.accounts.utilities.RoleChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,31 +25,39 @@ public class APPIdService {
     private final DefaultUUIDGeneratorService defaultUUIDGenerator;
     private final OrganizationService organizationService;
     private final TeamService teamService;
+    private final RoleChecker roleChecker;
 
-    public APPIdService(APPIdCustomRepository appIdRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
+    public APPIdService(RoleChecker roleChecker, APPIdCustomRepository appIdRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
                         OrganizationService organizationService, TeamService teamService) {
         this.appIdRepository = appIdRepository;
         this.defaultUUIDGenerator = defaultUUIDGenerator;
         this.organizationService = organizationService;
         this.teamService = teamService;
+        this.roleChecker = roleChecker;
     }
 
     public AppId createAPPId(AppId appId) {
         appId.setId(defaultUUIDGenerator.generateId());
         try {
+            if(Objects.isNull(appId.getOrganization()) || Objects.isNull(appId.getOrganization().getId()))
+                throw new BadRequestException("Invalid organization id ");
+
+            if(Objects.isNull(appId.getTeam()) || Objects.isNull(appId.getTeam().getId()))
+                throw new BadRequestException("Invalid Team id ");
+
             QueryCriteria queryCriteria = new QueryCriteria();
-            queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-            queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
+            queryCriteria.setTenantId(appId.getOrganization().getId());
+            queryCriteria.setTeamId(appId.getTeam().getId());
 
            Optional<AppId> existAppId = appIdRepository.validateExisting(queryCriteria, appId.getName(), appId.getAppId());
            if(existAppId.isPresent())
-               throw new BadRequestException("Error creating App ID", "App ID already exists with name or AppId "+appId.getName()+ ", " + appId.getAppId());
-           String tenantId =  RequestContext.getRequestContext().getTenantId();
+               throw new BadRequestException("App ID already exists with name or AppId "+appId.getName()+ ", " + appId.getAppId());
+           String tenantId =  appId.getOrganization().getId();
            Optional<Organization> dbOrganization = organizationService.findOrganizationById(tenantId);
            if(dbOrganization.isEmpty())
                throw new BadRequestException("Wrong organization id "+ tenantId);
-           String teamId =  RequestContext.getRequestContext().getTeamId();
-           Optional<Team> dbTeam =  teamService.findTeamById(teamId);
+           String teamId =  appId.getTeam().getId();
+           Optional<Team> dbTeam =  teamService.findByIdAndOrganizationId(teamId, appId.getOrganization().getId());
             if(dbTeam.isEmpty())
                 throw new BadRequestException("Wrong Team id "+ teamId);
             appId.setTeam(dbTeam.get());
@@ -74,44 +84,55 @@ public class APPIdService {
 
     public List<AppId> findAllAppIdsKeys() {
         QueryCriteria queryCriteria = new QueryCriteria();
-        queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-        queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
-        return appIdRepository.findAllAppIds(queryCriteria);
+        if(roleChecker.hasSuperAdminRole()) {
+            return appIdRepository.findAllAppIds(queryCriteria);
+        } else {
+            queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
+            queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
+            return  appIdRepository.findByTenantAndTeamId(queryCriteria);
+        }
     }
 
-    public Optional<AppId> updateAppId(AppId apiKey) {
-        Assert.notNull(apiKey.getId(), "APP ID cannot be null for update");
+    public Optional<AppId> updateAppId(AppId appId) {
+        Assert.notNull(appId.getId(), "APP ID cannot be null for update");
+
+        if(Objects.isNull(appId.getOrganization()) || Objects.isNull(appId.getOrganization().getId()))
+            throw new BadRequestException("Invalid organization id ");
+
+        if(Objects.isNull(appId.getTeam()) || Objects.isNull(appId.getTeam().getId()))
+            throw new BadRequestException("Invalid Team id ");
+
         QueryCriteria queryCriteria = new QueryCriteria();
-        queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-        queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
-        Optional<AppId> existingAPIKeyOptional = appIdRepository.findById(queryCriteria, apiKey.getId());
-        Optional<AppId> existAppId = appIdRepository.validateExisting(queryCriteria, apiKey.getName(), apiKey.getAppId());
+        queryCriteria.setTenantId(appId.getOrganization().getId());
+        queryCriteria.setTeamId(appId.getTeam().getId());
+        Optional<AppId> existingAPIKeyOptional = appIdRepository.findById(queryCriteria, appId.getId());
+        Optional<AppId> existAppId = appIdRepository.validateExisting(queryCriteria, appId.getName(), appId.getAppId());
 
         if (existingAPIKeyOptional.isPresent()) {
             AppId existingAppId = existingAPIKeyOptional.get();
             if (existAppId.isPresent() && !existAppId.get().getId().equals(existingAppId.getId())) {
-                throw new BadRequestException("Error creating App ID", "App ID already exists with name or AppId "+apiKey.getName()+ ", " + apiKey.getAppId());
+                throw new BadRequestException("Error creating App ID", "App ID already exists with name or AppId "+appId.getName()+ ", " + appId.getAppId());
             }
-            if (apiKey.getName() != null) {
-                existingAppId.setName(apiKey.getName());
+            if (appId.getName() != null) {
+                existingAppId.setName(appId.getName());
             }
-            if (apiKey.getDescription() != null) {
-                existingAppId.setDescription(apiKey.getDescription());
+            if (appId.getDescription() != null) {
+                existingAppId.setDescription(appId.getDescription());
             }
 
-            String tenantId =  RequestContext.getRequestContext().getTenantId();
+            String tenantId =  appId.getOrganization().getId();
             Optional<Organization> dbOrganization = organizationService.findOrganizationById(tenantId);
             if(dbOrganization.isEmpty())
                 throw new BadRequestException("Wrong organization id "+ tenantId);
-            String teamId =  RequestContext.getRequestContext().getTeamId();
-            Optional<Team> dbTeam =  teamService.findTeamById(teamId);
+            String teamId =  appId.getTeam().getId();
+            Optional<Team> dbTeam =  teamService.findByIdAndOrganizationId(teamId, appId.getOrganization().getId());
             if(dbTeam.isEmpty())
                 throw new BadRequestException("Wrong Team id "+ tenantId);
             existingAppId.setTeam(dbTeam.get());
             existingAppId.setOrganization(dbOrganization.get());
             return Optional.of(appIdRepository.save(existingAppId));
         } else {
-            throw new APIKeyNotFoundException("APP ID with id " + apiKey.getId() + " not found");
+            throw new APIKeyNotFoundException("APP ID with id " + appId.getId() + " not found");
         }
     }
 

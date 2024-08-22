@@ -2,6 +2,7 @@ package com.lkup.accounts.dto.configuration;
 
 import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.dto.team.TeamDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -15,13 +16,17 @@ public class CreateConfigurationDto {
 
     @NotNull
     @NotBlank(message = "Name cannot be blank")
+    @Schema(name = "Configuration Name", example = "dev config", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
+    @Schema(name = "Configuration description")
     private String description;
 
-    private OrganizationDto organizationDto;
+    @Schema(name = "Organization Id", example = "12344", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String organization;
 
-    private TeamDto teamDto;
+    @Schema(name = "Team Id", example = "12344", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String team;
 
     private String widgetColor;
 
@@ -33,15 +38,15 @@ public class CreateConfigurationDto {
 
     private Integer launcherButtonVisibility;
 
+    @Schema(name = "Widget Configuration", example = "12344")
     private Object widgetConfig;
 
     @NotBlank(message = "environment cannot be blank")
+    @Schema(name = "Environment Id", example = "12344")
     private String environment;
 
-    @NotBlank(message = "market cannot be blank")
-    private String market;
-
     @NotBlank(message = "appId cannot be blank")
+    @Schema(name = "App Id", example = "12344")
     private String appId;
 
     private String hostUrl;
@@ -49,5 +54,6 @@ public class CreateConfigurationDto {
     private String authTokenUrl;
 
     @NotBlank(message = "language cannot be blank")
+    @Schema(name = "Language", example = "en")
     private String language;
 }

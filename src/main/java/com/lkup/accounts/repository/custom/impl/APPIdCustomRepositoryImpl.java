@@ -97,4 +97,14 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
         Query query = new Query();
         globalMongoTemplate.findAllAndRemove(query, AppId.class);
     }
+
+    @Override
+    public List<AppId> findByTenantAndTeamId(QueryCriteria queryCriteria) {
+        Criteria criteria = new Criteria().andOperator(
+                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
+                Criteria.where("team.id").is(queryCriteria.getTeamId())
+        );
+        Query query = new Query(criteria);
+        return globalMongoTemplate.find(query, AppId.class);
+    }
 }

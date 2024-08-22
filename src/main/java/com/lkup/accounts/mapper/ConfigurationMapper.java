@@ -1,7 +1,6 @@
 package com.lkup.accounts.mapper;
 
-import com.lkup.accounts.document.Configuration;
-import com.lkup.accounts.document.Deployment;
+import com.lkup.accounts.document.*;
 import com.lkup.accounts.dto.configuration.ConfigurationDto;
 import com.lkup.accounts.dto.configuration.CreateConfigurationDto;
 import com.lkup.accounts.dto.configuration.UpdateConfigurationDto;
@@ -32,10 +31,20 @@ public class ConfigurationMapper {
     }
 
     public Configuration convertCreateDtoToConfiguration(CreateConfigurationDto createConfigurationDto) {
-        return modelMapper.map(createConfigurationDto, Configuration.class);
+        Configuration configuration  = modelMapper.map(createConfigurationDto, Configuration.class);
+        configuration.setOrganization(Organization.builder().id(createConfigurationDto.getOrganization()).build());
+        configuration.setTeam(Team.builder().id(createConfigurationDto.getTeam()).build());
+        configuration.setAppId(AppId.builder().id(createConfigurationDto.getAppId()).build());
+        configuration.setEnvironment(Environment.builder().id(createConfigurationDto.getEnvironment()).build());
+        return configuration;
     }
 
     public Configuration convertUpdateDtoToConfiguration(UpdateConfigurationDto updateConfigurationDto) {
-        return modelMapper.map(updateConfigurationDto, Configuration.class);
+        Configuration configuration  = modelMapper.map(updateConfigurationDto, Configuration.class);
+        configuration.setOrganization(Organization.builder().id(updateConfigurationDto.getOrganization()).build());
+        configuration.setTeam(Team.builder().id(updateConfigurationDto.getTeam()).build());
+        configuration.setAppId(AppId.builder().id(updateConfigurationDto.getAppId()).build());
+        configuration.setEnvironment(Environment.builder().id(updateConfigurationDto.getEnvironment()).build());
+        return configuration;
     }
 }

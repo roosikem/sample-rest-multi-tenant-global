@@ -1,5 +1,6 @@
 package com.lkup.accounts.mapper;
 
+import com.lkup.accounts.document.Team;
 import com.lkup.accounts.dto.environment.CreateEnvironmentDto;
 import com.lkup.accounts.dto.environment.EnvironmentDto;
 import com.lkup.accounts.dto.environment.UpdateEnvironmentDto;
@@ -58,6 +59,11 @@ public class EnvironmentMapper {
         }
         if(null != createEnvironmentDto.getOrganizationId() ) {
             environment.setOrganization(organizationMapper.convertOrgIdToOrganization(createEnvironmentDto.getOrganizationId()));
+        }
+        if(null != createEnvironmentDto.getTeamId()) {
+            Team team = new Team();
+            team.setId(createEnvironmentDto.getTeamId());
+            environment.setTeam(team);
         }
         return environment;
     }

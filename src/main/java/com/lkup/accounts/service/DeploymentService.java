@@ -98,6 +98,9 @@ public class DeploymentService {
             String url = this.awsUpload(deployment);
             if(Objects.nonNull(url)) {
                 deployment.setPublishConfigUrl(url);
+                deployment.getConfiguration().setStatus(ApplicationConstants.PUBLISHED_STATUS);
+                deployment.getConfiguration().setConfigUrl(url);
+                configurationService.updatePublishedConfiguration(deployment.getConfiguration());
                 deploymentRepository.save(deployment);
                 return Optional.of(deploymentRepository.save(deployment));
             }
@@ -108,21 +111,25 @@ public class DeploymentService {
 
     public String awsUpload(Deployment deployment) {
         String url = null;
-        if(Objects.nonNull(deployment.getConfiguration())) {
-            Configuration configuration = deployment.getConfiguration();
-            String publishUrl = deployment.getPublishConfigUrl();
+        Configuration configuration = deployment.getConfiguration();
+        url = publishConfiguration(configuration, deployment.getPublishConfigUrl());
+        return url;
+    }
+
+    private String publishConfiguration(Configuration configuration, String publishUrl) {
+        String url = null;
+        if(Objects.nonNull(configuration)) {
             if(Objects.isNull(publishUrl) || publishUrl.isEmpty()) {
                 publishUrl = createPublishUrl(configuration);
             }
             ObjectMapper mapper = new ObjectMapper();
             try {
-                JsonNode actualObj = mapper.readTree((String)configuration.getWidgetConfig());
-                url = awsS3Service.uploadJsonData(publishUrl , mapper.writeValueAsString(actualObj));
+                JsonNode actualObj = mapper.readTree((String) configuration.getWidgetConfig());
+                url = awsS3Service.uploadJsonData(publishUrl , mapper.writeValueAsString(actualObj), configuration.getEnvironment());
             } catch (JsonProcessingException e) {
                 throw new AwsS3UploadException("InValid json");
             }
         }
-
         return url;
     }
 
@@ -132,7 +139,7 @@ public class DeploymentService {
             uriBuilder.append(awsProperties.getDirectory()).append("/");
         }
         uriBuilder.append(configuration.getId()).append("_");
-        Optional.ofNullable(configuration.getMarket()).ifPresent(uriBuilder::append);
+        Optional.ofNullable(configuration.getOrganization().getName()).ifPresent(uriBuilder::append);
         uriBuilder.append("_");
         Optional.ofNullable(configuration.getEnvironment()).ifPresent(uriBuilder::append);
         uriBuilder.append("_");

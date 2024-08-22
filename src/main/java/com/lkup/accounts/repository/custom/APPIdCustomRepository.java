@@ -25,4 +25,6 @@ public interface APPIdCustomRepository {
     Optional<List<AppId>> findByIds(QueryCriteria queryCriteria, List<String> ids);
 
     void deleteAll(QueryCriteria queryCriteria);
+
+    List<AppId> findByTenantAndTeamId(QueryCriteria queryCriteria);
 }

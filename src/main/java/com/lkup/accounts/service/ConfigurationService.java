@@ -15,8 +15,11 @@ import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.custom.ConfigurationCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
 import com.lkup.accounts.utilities.ApplicationConstants;
+import com.lkup.accounts.utilities.OrganizationTeamValidator;
+import com.lkup.accounts.utilities.RoleChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -30,10 +33,15 @@ public class ConfigurationService {
     private final DefaultUUIDGeneratorService defaultUUIDGenerator;
     private final OrganizationRepository organizationRepository;
     private final TeamRepository teamRepository;
+    private final RoleChecker roleChecker;
 
-    public ConfigurationService(ConfigurationCustomRepository configurationRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
+    @Autowired
+    private OrganizationTeamValidator organizationTeamValidator;
+
+    public ConfigurationService(RoleChecker roleChecker, ConfigurationCustomRepository configurationRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
                                 OrganizationRepository organizationRepository,
                                 TeamRepository teamRepository) {
+        this.roleChecker = roleChecker;
         this.configurationRepository = configurationRepository;
         this.defaultUUIDGenerator = defaultUUIDGenerator;
         this.organizationRepository = organizationRepository;
@@ -50,11 +58,20 @@ public class ConfigurationService {
     public Configuration createConfiguration(Configuration configuration) {
         configuration.setId(defaultUUIDGenerator.generateId());
         configuration.setCreatedAt(new Date());
+        Assert.notNull(configuration.getOrganization(), "Organization can not be empty");
+        Assert.notNull(configuration.getOrganization().getId(), "Organization Id can not be empty");
+
+        Assert.notNull(configuration.getTeam(), "Team can not be empty");
+        Assert.notNull(configuration.getTeam().getId(), "Team Id can not be empty");
         try{
+
+            organizationTeamValidator.validateOrganizationTeam(configuration.getOrganization().getId(), configuration.getTeam().getId());
+
             QueryCriteria queryCriteria = new QueryCriteria();
-            queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-            queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
-           Optional<Configuration> configurationDbName = configurationRepository.findByName(queryCriteria, configuration.getName());
+            queryCriteria.setTenantId(configuration.getOrganization().getId());
+            queryCriteria.setTeamId(configuration.getTeam().getId());
+
+            Optional<Configuration> configurationDbName = configurationRepository.findByName(queryCriteria, configuration.getName());
            if(configurationDbName.isPresent())
                throw new BadRequestException("Configuration already exist with name" + configuration.getName());
 
@@ -77,7 +94,7 @@ public class ConfigurationService {
                         jsonObject.addProperty(ApplicationConstants.JSON_TOKEN_URL_KEY, value)
                 );
                 Optional.ofNullable(configuration.getHostUrl()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_HOST_URL_KEY, value));
-                Optional.ofNullable(configuration.getAppId()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_ID_KEY, value));
+                Optional.ofNullable(configuration.getAppId()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_ID_KEY, value.getAppId()));
                 Optional.ofNullable(configuration.getWidgetColor()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_HEADER_COLOR, value));
                Object s = gson.toJson(jsonObject, Object.class);
                 configuration.setWidgetConfig(s);
@@ -97,9 +114,11 @@ public class ConfigurationService {
     public Optional<Configuration> updateConfiguration(Configuration configuration) {
         Assert.notNull(configuration.getId(), "Configuration ID cannot be null for update");
         try {
+            organizationTeamValidator.validateOrganizationTeam(configuration.getOrganization().getId(), configuration.getTeam().getId());
+
             QueryCriteria queryCriteria = new QueryCriteria();
-            queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-            queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
+            queryCriteria.setTenantId(configuration.getOrganization().getId());
+            queryCriteria.setTeamId(configuration.getTeam().getId());
             Optional<Configuration> existingConfigurationOptional = configurationRepository.findConfigurationById(queryCriteria, configuration.getId());
 
             if (existingConfigurationOptional.isPresent()) {
@@ -112,7 +131,7 @@ public class ConfigurationService {
                 if(organizationDb.isEmpty())
                     throw new BadRequestException("Organization not exist " + configuration.getOrganization().getName());
 
-                Optional<Team> teamDb = teamRepository.findById(configuration.getTeam().getId());
+                Optional<Team> teamDb = teamRepository.findByIdAndOrganizationId(configuration.getOrganization().getId(), configuration.getTeam().getId());
                 if(teamDb.isEmpty())
                     throw new BadRequestException("Team not exist " + configuration.getTeam().getName());
 
@@ -127,7 +146,6 @@ public class ConfigurationService {
                 Optional.ofNullable(configuration.getBottomSpace()).ifPresent(existingConfiguration::setBottomSpace);
                 Optional.ofNullable(configuration.getLauncherButtonVisibility()).ifPresent(existingConfiguration::setLauncherButtonVisibility);
                 Optional.ofNullable(configuration.getWidgetConfig()).ifPresent(existingConfiguration::setWidgetConfig);
-                Optional.ofNullable(configuration.getMarket()).ifPresent(existingConfiguration::setMarket);
                 Optional.ofNullable(configuration.getEnvironment()).ifPresent(existingConfiguration::setEnvironment);
                 Optional.ofNullable(configuration.getAppId()).ifPresent(existingConfiguration::setAppId);
                 Optional.ofNullable(configuration.getHostUrl()).ifPresent(existingConfiguration::setHostUrl);
@@ -146,7 +164,7 @@ public class ConfigurationService {
                            jsonObject.addProperty(ApplicationConstants.JSON_TOKEN_URL_KEY, value)
                    );
                    Optional.ofNullable(configuration.getHostUrl()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_HOST_URL_KEY, value));
-                   Optional.ofNullable(configuration.getAppId()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_ID_KEY, value));
+                   Optional.ofNullable(configuration.getAppId()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_ID_KEY, value.getAppId()));
                    Optional.ofNullable(configuration.getWidgetColor()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_HEADER_COLOR, value));
                    Object s = gson.toJson(jsonObject, Object.class);
                    configuration.setWidgetConfig(s);
@@ -160,5 +178,20 @@ public class ConfigurationService {
         }
     }
 
+    public Configuration updatePublishedConfiguration(Configuration configuration) {
+
+        QueryCriteria queryCriteria = new QueryCriteria();
+        queryCriteria.setTenantId(configuration.getOrganization().getId());
+        queryCriteria.setTeamId(configuration.getTeam().getId());
+        Optional<Configuration> existingConfigurationOptional = configurationRepository.findConfigurationById(queryCriteria, configuration.getId());
+
+        if (existingConfigurationOptional.isPresent()) {
+            Configuration existingConfiguration = existingConfigurationOptional.get();
+            existingConfiguration.setStatus(configuration.getStatus());
+            existingConfiguration.setConfigUrl(configuration.getConfigUrl());
+            return configurationRepository.save(existingConfiguration);
+        }
+        throw new ConfigurationNotFoundException("Configuration with id " + configuration.getId() + " not found");
+    }
 
 }

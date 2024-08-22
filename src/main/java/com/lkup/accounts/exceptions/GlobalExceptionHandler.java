@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -129,7 +130,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleBadRequest(Exception ex, WebRequest request) {
-        String errorMessage = ex.getMessage() + "-" + ex.getCause().getLocalizedMessage();
+        String errorMessage = ex.getMessage();
+        if(Objects.nonNull(ex.getCause())) {
+            errorMessage += "-" + ex.getCause().getLocalizedMessage();
+        }
         ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, errorMessage, request);
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }

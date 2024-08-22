@@ -16,9 +16,10 @@ public class ConfigurationDto {
     private String name;
     private String description;
 
-    private OrganizationDto organizationDto;
 
-    private TeamDto teamDto;
+    private OrganizationDto organization;
+
+    private TeamDto team;
 
     private String widgetColor;
 
@@ -35,8 +36,6 @@ public class ConfigurationDto {
     private String configUrl;
 
     private String environment;
-
-    private String market;
 
     private String appId;
 

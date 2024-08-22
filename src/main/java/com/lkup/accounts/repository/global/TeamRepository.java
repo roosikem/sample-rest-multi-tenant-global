@@ -1,5 +1,6 @@
 package com.lkup.accounts.repository.global;
 
+import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.document.Team;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -28,4 +29,13 @@ public interface TeamRepository extends MongoRepository<Team, String> {
 
     @Query(value = "{ '_id' : ?0 }", delete = true)
     void deleteTeam(String id);
+
+    @Query(value = "{ 'name' : { $eq : ?0 } }")
+    Optional<Team> findByName(String name);
+
+    @Query(value = "{ 'name' : ?0, 'organization.id' : ?1 }")
+    Optional<Team> findByNameAndOrganizationId(String name, String id);
+
+    @Query(value = "{ 'id' : ?0, 'organization.id' : ?1 }")
+    Optional<Team> findByIdAndOrganizationId(String id, String orgId);
 }

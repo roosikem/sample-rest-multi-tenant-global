@@ -18,15 +18,19 @@ public class AppIdDto {
     private String name;
     private String appId;
     private String description;
+    private String organization;
+    private String team;
     @CreatedDate
     private Date createdAt;
     @LastModifiedDate
     private Date updatedAt;
 
 
-    public AppIdDto(String name, String appId, String description){
+    public AppIdDto(String name, String appId, String description, String organization, String team){
         this.name = name;
         this.appId = appId;
         this.description = description;
+        this.organization = organization;
+        this.team = team;
     }
 }

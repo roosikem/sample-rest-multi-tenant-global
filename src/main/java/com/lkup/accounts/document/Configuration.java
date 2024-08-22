@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Document("configurations")
 public class Configuration {
     @Id
@@ -39,11 +40,9 @@ public class Configuration {
 
     private String configUrl;
 
-    private String environment;
+    private Environment environment;
 
-    private String market;
-
-    private String appId;
+    private AppId appId;
 
     private String hostUrl;
 
