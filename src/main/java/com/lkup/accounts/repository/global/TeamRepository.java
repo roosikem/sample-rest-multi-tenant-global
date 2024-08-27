@@ -1,6 +1,5 @@
 package com.lkup.accounts.repository.global;
 
-import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.document.Team;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

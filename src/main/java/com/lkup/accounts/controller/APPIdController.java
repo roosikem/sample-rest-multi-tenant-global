@@ -1,9 +1,6 @@
 package com.lkup.accounts.controller;
 
-import com.lkup.accounts.document.APIKey;
 import com.lkup.accounts.document.AppId;
-import com.lkup.accounts.dto.apikey.APIKeyDto;
-import com.lkup.accounts.dto.apikey.UpdateAPIKeyRequestDto;
 import com.lkup.accounts.dto.appId.AppIdDto;
 import com.lkup.accounts.dto.appId.CreateUpdateAppIdDto;
 import com.lkup.accounts.mapper.APPIdMapper;

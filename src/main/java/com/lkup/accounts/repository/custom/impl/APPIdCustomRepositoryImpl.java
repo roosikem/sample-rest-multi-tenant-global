@@ -27,11 +27,11 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
     @Override
     public Optional<AppId> validateExisting(QueryCriteria queryCriteria, String name, String appId) {
         Query query = new Query();
-        Criteria orCriteria = new Criteria().orOperator( Criteria.where("appId").is(appId));
+        Criteria orCriteria = new Criteria().orOperator(Criteria.where("appId").is(appId));
         query.addCriteria(orCriteria);
-        List<AppId> appIds =  globalMongoTemplate.find(query, AppId.class);
-        if(!appIds.isEmpty())
-           return Optional.ofNullable(appIds.get(0));
+        List<AppId> appIds = globalMongoTemplate.find(query, AppId.class);
+        if (!appIds.isEmpty())
+            return Optional.ofNullable(appIds.get(0));
         return Optional.empty();
     }
 
@@ -47,7 +47,7 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
 
     @Override
     public <S extends AppId> S save(S entity) {
-       return globalMongoTemplate.save(entity);
+        return globalMongoTemplate.save(entity);
     }
 
     @Override

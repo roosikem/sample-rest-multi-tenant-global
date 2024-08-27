@@ -20,10 +20,11 @@ public class CountryService {
         this.countryRepository = countryRepository;
         this.defaultUUIDGenerator = defaultUUIDGenerator;
     }
-    
+
     public long getTotalCountries() {
         return countryRepository.count();
     }
+
     public Optional<Country> findCountryById(String id) {
         return countryRepository.findById(id);
     }
@@ -39,8 +40,6 @@ public class CountryService {
     public List<Country> findAllCountries() {
         return countryRepository.findAll();
     }
-
-
 
 
 }

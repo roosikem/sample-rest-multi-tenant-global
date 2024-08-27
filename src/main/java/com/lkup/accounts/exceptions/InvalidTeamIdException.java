@@ -1,6 +1,6 @@
 package com.lkup.accounts.exceptions;
 
-public class InvalidTeamIdException extends RuntimeException{
+public class InvalidTeamIdException extends RuntimeException {
     public InvalidTeamIdException() {
         super();
     }

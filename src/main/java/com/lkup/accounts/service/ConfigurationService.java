@@ -10,10 +10,10 @@ import com.lkup.accounts.document.Team;
 import com.lkup.accounts.exceptions.BadRequestException;
 import com.lkup.accounts.exceptions.configuration.ConfigurationNotFoundException;
 import com.lkup.accounts.exceptions.configuration.ConfigurationServiceException;
-import com.lkup.accounts.repository.global.OrganizationRepository;
-import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.custom.ConfigurationCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
+import com.lkup.accounts.repository.global.OrganizationRepository;
+import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.utilities.ApplicationConstants;
 import com.lkup.accounts.utilities.OrganizationTeamValidator;
 import com.lkup.accounts.utilities.RoleChecker;
@@ -23,7 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ConfigurationService {
@@ -63,7 +66,7 @@ public class ConfigurationService {
 
         Assert.notNull(configuration.getTeam(), "Team can not be empty");
         Assert.notNull(configuration.getTeam().getId(), "Team Id can not be empty");
-        try{
+        try {
 
             organizationTeamValidator.validateOrganizationTeam(configuration.getOrganization().getId(), configuration.getTeam().getId());
 
@@ -72,38 +75,39 @@ public class ConfigurationService {
             queryCriteria.setTeamId(configuration.getTeam().getId());
 
             Optional<Configuration> configurationDbName = configurationRepository.findByName(queryCriteria, configuration.getName());
-           if(configurationDbName.isPresent())
-               throw new BadRequestException("Configuration already exist with name" + configuration.getName());
+            if (configurationDbName.isPresent())
+                throw new BadRequestException("Configuration already exist with name" + configuration.getName());
 
             Optional<Organization> organizationDb = organizationRepository.findById(configuration.getOrganization().getId());
-            if(organizationDb.isEmpty())
+            if (organizationDb.isEmpty())
                 throw new BadRequestException("Organization not exist " + configuration.getOrganization().getName());
 
             Optional<Team> teamDb = teamRepository.findById(configuration.getTeam().getId());
-            if(teamDb.isEmpty())
+            if (teamDb.isEmpty())
                 throw new BadRequestException("Team not exist " + configuration.getTeam().getName());
 
             configuration.setTeam(teamDb.get());
             configuration.setOrganization(organizationDb.get());
 
-            Object config =  configuration.getWidgetConfig();
-            if(Objects.nonNull(config)) {
-               Gson gson = new Gson();
-                JsonObject jsonObject =  gson.fromJson((String)config, JsonObject.class);
-                Optional.ofNullable(configuration.getAuthTokenUrl()).ifPresent(value->
+            Object config = configuration.getWidgetConfig();
+            if (Objects.nonNull(config)) {
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson((String) config, JsonObject.class);
+                Optional.ofNullable(configuration.getAuthTokenUrl()).ifPresent(value ->
                         jsonObject.addProperty(ApplicationConstants.JSON_TOKEN_URL_KEY, value)
                 );
                 Optional.ofNullable(configuration.getHostUrl()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_HOST_URL_KEY, value));
                 Optional.ofNullable(configuration.getAppId()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_ID_KEY, value.getAppId()));
                 Optional.ofNullable(configuration.getWidgetColor()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_HEADER_COLOR, value));
-               Object s = gson.toJson(jsonObject, Object.class);
+                Object s = gson.toJson(jsonObject, Object.class);
                 configuration.setWidgetConfig(s);
             }
             return configurationRepository.save(configuration);
-        }catch (Exception e) {
-           throw new ConfigurationServiceException("Error creating configuration", e);
+        } catch (Exception e) {
+            throw new ConfigurationServiceException("Error creating configuration", e);
         }
     }
+
     public Optional<Configuration> findConfigurationById(String id) {
         QueryCriteria queryCriteria = new QueryCriteria();
         queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
@@ -124,15 +128,15 @@ public class ConfigurationService {
             if (existingConfigurationOptional.isPresent()) {
 
                 Optional<Configuration> configurationDbName = configurationRepository.findByName(queryCriteria, configuration.getName());
-                if(configurationDbName.isPresent() && !configurationDbName.get().getId().equals(configuration.getId()))
+                if (configurationDbName.isPresent() && !configurationDbName.get().getId().equals(configuration.getId()))
                     throw new BadRequestException("Configuration already exist with name" + configuration.getName());
 
                 Optional<Organization> organizationDb = organizationRepository.findById(configuration.getOrganization().getId());
-                if(organizationDb.isEmpty())
+                if (organizationDb.isEmpty())
                     throw new BadRequestException("Organization not exist " + configuration.getOrganization().getName());
 
                 Optional<Team> teamDb = teamRepository.findByIdAndOrganizationId(configuration.getOrganization().getId(), configuration.getTeam().getId());
-                if(teamDb.isEmpty())
+                if (teamDb.isEmpty())
                     throw new BadRequestException("Team not exist " + configuration.getTeam().getName());
 
                 Configuration existingConfiguration = existingConfigurationOptional.get();
@@ -156,24 +160,24 @@ public class ConfigurationService {
                 organizationDb.ifPresent(existingConfiguration::setOrganization);
                 teamDb.ifPresent(existingConfiguration::setTeam);
 
-               Object config =  configuration.getWidgetConfig();
-               if(Objects.nonNull(config)) {
-                   Gson gson = new Gson();
-                   JsonObject jsonObject =  gson.fromJson((String)config, JsonObject.class);
-                   Optional.ofNullable(configuration.getAuthTokenUrl()).ifPresent(value->
-                           jsonObject.addProperty(ApplicationConstants.JSON_TOKEN_URL_KEY, value)
-                   );
-                   Optional.ofNullable(configuration.getHostUrl()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_HOST_URL_KEY, value));
-                   Optional.ofNullable(configuration.getAppId()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_ID_KEY, value.getAppId()));
-                   Optional.ofNullable(configuration.getWidgetColor()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_HEADER_COLOR, value));
-                   Object s = gson.toJson(jsonObject, Object.class);
-                   configuration.setWidgetConfig(s);
-               }
+                Object config = configuration.getWidgetConfig();
+                if (Objects.nonNull(config)) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = gson.fromJson((String) config, JsonObject.class);
+                    Optional.ofNullable(configuration.getAuthTokenUrl()).ifPresent(value ->
+                            jsonObject.addProperty(ApplicationConstants.JSON_TOKEN_URL_KEY, value)
+                    );
+                    Optional.ofNullable(configuration.getHostUrl()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_HOST_URL_KEY, value));
+                    Optional.ofNullable(configuration.getAppId()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_ID_KEY, value.getAppId()));
+                    Optional.ofNullable(configuration.getWidgetColor()).ifPresent(value -> jsonObject.addProperty(ApplicationConstants.JSON_APP_HEADER_COLOR, value));
+                    Object s = gson.toJson(jsonObject, Object.class);
+                    configuration.setWidgetConfig(s);
+                }
                 return Optional.of(configurationRepository.save(existingConfiguration));
             } else {
                 throw new ConfigurationNotFoundException("Configuration with id " + configuration.getId() + " not found");
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new ConfigurationNotFoundException("Configuration with id " + configuration.getId() + " not found");
         }
     }

@@ -1,11 +1,9 @@
 package com.lkup.accounts.utilities;
 
 import com.lkup.accounts.document.User;
-import com.sun.source.tree.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,7 +37,7 @@ public class RoleChecker {
         if (authentication == null) {
             return false;
         }
-       User user = (User) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
         return user.getRole().getName().equals(RoleConstants.SUPER_ADMIN_ROLE);
     }
 
@@ -50,11 +48,11 @@ public class RoleChecker {
         }
         User user = (User) authentication.getPrincipal();
         return user.getTeams().stream()
-                .anyMatch(team ->team.getId().equals(teamId));
+                .anyMatch(team -> team.getId().equals(teamId));
     }
 
     public boolean hasUserAccessTeamAndOrganization(String requestTenantId, String requestedTeamId) {
-        if(hasSuperAdminRole()){
+        if (hasSuperAdminRole()) {
             return true;
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,8 +61,8 @@ public class RoleChecker {
         }
 
         User user = (User) authentication.getPrincipal();
-        boolean isTeamAccess =  user.getTeams().stream()
-                .anyMatch(team ->team.getId().equals(requestedTeamId));
+        boolean isTeamAccess = user.getTeams().stream()
+                .anyMatch(team -> team.getId().equals(requestedTeamId));
         boolean isOrganizationAccess = user.getOrganization().getId().equals(requestTenantId);
 
         return isTeamAccess && isOrganizationAccess;

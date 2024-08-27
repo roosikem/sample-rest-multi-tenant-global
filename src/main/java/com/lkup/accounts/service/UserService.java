@@ -6,14 +6,13 @@ import com.lkup.accounts.document.User;
 import com.lkup.accounts.exceptions.user.UserNotFoundException;
 import com.lkup.accounts.exceptions.user.UserServiceException;
 import com.lkup.accounts.repository.global.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
@@ -51,14 +50,14 @@ public class UserService {
     public Optional<User> findUserById(String id) {
         Optional<User> user = userRepository.findUserById(id);
         List<Team> teams = user.get().getTeams();
-        for(Team t: teams) {
+        for (Team t : teams) {
             String n = t.getName();
             System.out.println(n);
         }
         return userRepository.findUserById(id);
     }
 
-    public List<User> findAllUsers(){
+    public List<User> findAllUsers() {
         return userRepository.findAllUsers();
     }
 

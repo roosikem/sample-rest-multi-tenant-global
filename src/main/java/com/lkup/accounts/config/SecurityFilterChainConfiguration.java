@@ -3,6 +3,7 @@ package com.lkup.accounts.config;
 import com.lkup.accounts.context.RequestHandlerInterceptor;
 import com.lkup.accounts.context.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -17,7 +18,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +40,7 @@ public class SecurityFilterChainConfiguration {
     @Value("#{'${cors.allowed-headers}'.split(',')}")
     private List<String> allowedHeaders;
 
-    private static final String[] SWAGGER_WHITELIST = {"/swagger-ui/**", "/api-docs/**",  "/v3/api-docs/**", "/swagger-resources/**", "/swagger-resources", "/gtp-config-ui/**" ,"/swagger-ui.html"};
+    private static final String[] SWAGGER_WHITELIST = {"/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-resources", "/gtp-config-ui/**", "/swagger-ui.html"};
 
     public SecurityFilterChainConfiguration(AuthenticationEntryPoint authenticationEntryPoint,
                                             AuthenticationProvider authenticationProvider, JwtAuthenticationFilter jwtFilter, RequestHandlerInterceptor requestHandlerInterceptor) {
@@ -60,7 +60,7 @@ public class SecurityFilterChainConfiguration {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                                .cors(cors -> cors.configurationSource(request -> {
+                .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(allowedOrigins);
                     configuration.setAllowedMethods(allowedMethods);

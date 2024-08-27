@@ -1,7 +1,5 @@
 package com.lkup.accounts.dto.configuration;
 
-import com.lkup.accounts.dto.organization.OrganizationDto;
-import com.lkup.accounts.dto.team.TeamDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

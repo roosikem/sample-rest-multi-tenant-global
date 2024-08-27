@@ -1,8 +1,8 @@
 package com.lkup.accounts.controller;
 
+import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.dto.organization.CreateOrganizationDto;
 import com.lkup.accounts.dto.organization.OrganizationDto;
-import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.dto.organization.UpdateOrganizationDto;
 import com.lkup.accounts.mapper.OrganizationMapper;
 import com.lkup.accounts.service.OrganizationService;

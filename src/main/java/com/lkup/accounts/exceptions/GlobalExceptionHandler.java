@@ -1,12 +1,15 @@
 package com.lkup.accounts.exceptions;
 
 import com.lkup.accounts.dto.error.ErrorDto;
-import com.lkup.accounts.exceptions.apikey.*;
+import com.lkup.accounts.exceptions.apikey.APIKeyNotFoundException;
+import com.lkup.accounts.exceptions.apikey.APIKeyServiceException;
 import com.lkup.accounts.exceptions.aws.AwsS3UploadException;
 import com.lkup.accounts.exceptions.environment.EnvironmentNotFoundException;
 import com.lkup.accounts.exceptions.environment.EnvironmentServiceException;
-import com.lkup.accounts.exceptions.role.*;
-import com.lkup.accounts.exceptions.user.*;
+import com.lkup.accounts.exceptions.role.RoleNotFoundException;
+import com.lkup.accounts.exceptions.role.RoleServiceException;
+import com.lkup.accounts.exceptions.user.UserNotFoundException;
+import com.lkup.accounts.exceptions.user.UserServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -79,7 +82,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Object> handleAccessDeniedExceptions(AccessDeniedException ex,  WebRequest request) {
+    public ResponseEntity<Object> handleAccessDeniedExceptions(AccessDeniedException ex, WebRequest request) {
         ErrorDto message = buildMessage(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
         return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
     }
@@ -102,7 +105,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AwsS3UploadException.class)
-    public ResponseEntity<ErrorDto> handleAwsS3UploadException(AwsS3UploadException ex,  WebRequest request) {
+    public ResponseEntity<ErrorDto> handleAwsS3UploadException(AwsS3UploadException ex, WebRequest request) {
         ErrorDto message = buildMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
         return new ResponseEntity<>(message, HttpStatus.BAD_GATEWAY);
     }
@@ -131,7 +134,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleBadRequest(Exception ex, WebRequest request) {
         String errorMessage = ex.getMessage();
-        if(Objects.nonNull(ex.getCause())) {
+        if (Objects.nonNull(ex.getCause())) {
             errorMessage += "-" + ex.getCause().getLocalizedMessage();
         }
         ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, errorMessage, request);
@@ -139,13 +142,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTenantIdException.class)
-    public ResponseEntity<ErrorDto> handleInvalidTenantIdException(InvalidTenantIdException ex,  WebRequest request) {
+    public ResponseEntity<ErrorDto> handleInvalidTenantIdException(InvalidTenantIdException ex, WebRequest request) {
         ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidTeamIdException.class)
-    public ResponseEntity<ErrorDto> handleInvalidTeamIdException(InvalidTeamIdException ex,  WebRequest request) {
+    public ResponseEntity<ErrorDto> handleInvalidTeamIdException(InvalidTeamIdException ex, WebRequest request) {
         ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
         return new ResponseEntity<>(message, HttpStatus.BAD_GATEWAY);
     }

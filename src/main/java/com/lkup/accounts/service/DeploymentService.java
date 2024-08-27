@@ -50,15 +50,16 @@ public class DeploymentService {
         return deploymentRepository.findAllDeployments(queryCriteria);
     }
 
-    public  Deployment createDeployment(Deployment deployment) {
+    public Deployment createDeployment(Deployment deployment) {
         deployment.setId(defaultUUIDGenerator.generateId());
-        try{
-            return  deploymentRepository.save(deployment);
-        }catch (Exception e) {
+        try {
+            return deploymentRepository.save(deployment);
+        } catch (Exception e) {
             logger.error("Error creating deployment", e);
             throw new DeploymentServiceException("Error creating deployment", e.getMessage());
         }
     }
+
     public Optional<Deployment> findDeploymentById(String id) {
         QueryCriteria queryCriteria = new QueryCriteria();
         queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
@@ -82,7 +83,7 @@ public class DeploymentService {
             if (deployment.getStatus() != null) {
                 existingDeployment.setStatus(deployment.getStatus());
             }
-            if(deployment.getConfiguration() != null) {
+            if (deployment.getConfiguration() != null) {
                 Optional<Configuration> configDB = configurationService.findConfigurationById(deployment.getConfiguration().getId());
                 configDB.ifPresent(existingDeployment::setConfiguration);
             }
@@ -94,9 +95,9 @@ public class DeploymentService {
     }
 
     public Optional<Deployment> publishConfiguration(Deployment deployment) {
-        if(deployment.getStatus()) {
+        if (deployment.getStatus()) {
             String url = this.awsUpload(deployment);
-            if(Objects.nonNull(url)) {
+            if (Objects.nonNull(url)) {
                 deployment.setPublishConfigUrl(url);
                 deployment.getConfiguration().setStatus(ApplicationConstants.PUBLISHED_STATUS);
                 deployment.getConfiguration().setConfigUrl(url);
@@ -118,14 +119,14 @@ public class DeploymentService {
 
     private String publishConfiguration(Configuration configuration, String publishUrl) {
         String url = null;
-        if(Objects.nonNull(configuration)) {
-            if(Objects.isNull(publishUrl) || publishUrl.isEmpty()) {
+        if (Objects.nonNull(configuration)) {
+            if (Objects.isNull(publishUrl) || publishUrl.isEmpty()) {
                 publishUrl = createPublishUrl(configuration);
             }
             ObjectMapper mapper = new ObjectMapper();
             try {
                 JsonNode actualObj = mapper.readTree((String) configuration.getWidgetConfig());
-                url = awsS3Service.uploadJsonData(publishUrl , mapper.writeValueAsString(actualObj), configuration.getEnvironment());
+                url = awsS3Service.uploadJsonData(publishUrl, mapper.writeValueAsString(actualObj), configuration.getEnvironment());
             } catch (JsonProcessingException e) {
                 throw new AwsS3UploadException("InValid json");
             }
@@ -135,7 +136,7 @@ public class DeploymentService {
 
     private String createPublishUrl(Configuration configuration) {
         StringBuilder uriBuilder = new StringBuilder();
-        if(Objects.nonNull(awsProperties.getDirectory()) && !awsProperties.getDirectory().isEmpty()) {
+        if (Objects.nonNull(awsProperties.getDirectory()) && !awsProperties.getDirectory().isEmpty()) {
             uriBuilder.append(awsProperties.getDirectory()).append("/");
         }
         uriBuilder.append(configuration.getId()).append("_");

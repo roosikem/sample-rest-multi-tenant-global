@@ -1,5 +1,6 @@
 package com.lkup.accounts.dto.configuration;
 
+import com.lkup.accounts.dto.environment.EnvironmentDto;
 import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.dto.team.TeamDto;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class ConfigurationDto {
 
     private String configUrl;
 
-    private String environment;
+    private EnvironmentDto environment;
 
     private String appId;
 

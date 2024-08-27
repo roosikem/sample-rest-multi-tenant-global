@@ -9,9 +9,13 @@ import com.lkup.accounts.service.EnvironmentService;
 import com.lkup.accounts.utilities.PermissionConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,7 +34,7 @@ public class MarketsController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('" + PermissionConstants.ADMINISTRATOR + "', '" + PermissionConstants.VIEW_CONFIGURATION + "','" + PermissionConstants.CREATE_CONFIGURATION + "')")
     public ResponseEntity<List<OrganizationDto>> getAllOrganizationWithEnv() {
-        List<Environment> environments =  environmentService.findAllEnvironments();
+        List<Environment> environments = environmentService.findAllEnvironments();
         List<EnvironmentDto> environmentPojoList = environmentMapper.convertEnvironmentsToDtos(environments);
         Map<OrganizationDto, List<EnvironmentDto>> orgEnvMap = environmentPojoList.stream().filter(env -> Objects.nonNull(env.getOrganizationDto())).collect(Collectors.groupingBy(EnvironmentDto::getOrganizationDto));
         orgEnvMap.forEach(OrganizationDto::setEnvironments);

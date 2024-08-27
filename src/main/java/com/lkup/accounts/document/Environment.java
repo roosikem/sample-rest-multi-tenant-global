@@ -1,6 +1,5 @@
 package com.lkup.accounts.document;
 
-import com.lkup.accounts.dto.appId.AppIdDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

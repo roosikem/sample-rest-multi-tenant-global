@@ -1,17 +1,14 @@
 package com.lkup.accounts.mapper;
 
+import com.lkup.accounts.document.APIKey;
 import com.lkup.accounts.dto.apikey.APIKeyDto;
 import com.lkup.accounts.dto.apikey.CreateAPIKeyDto;
 import com.lkup.accounts.dto.apikey.UpdateAPIKeyRequestDto;
-import com.lkup.accounts.document.APIKey;
-import com.lkup.accounts.dto.appId.AppIdDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 @Component
 public class APIKeyMapper {

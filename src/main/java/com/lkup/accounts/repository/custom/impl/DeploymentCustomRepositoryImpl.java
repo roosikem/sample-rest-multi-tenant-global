@@ -20,9 +20,10 @@ public class DeploymentCustomRepositoryImpl implements DeploymentCustomRepositor
     public DeploymentCustomRepositoryImpl(@Qualifier("tenantMongoTemplate") MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
+
     @Override
     public Optional<Deployment> findDeploymentById(QueryCriteria queryCriteria, String id) {
-       return findById(queryCriteria, id);
+        return findById(queryCriteria, id);
     }
 
     @Override

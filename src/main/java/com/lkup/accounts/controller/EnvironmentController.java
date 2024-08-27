@@ -1,9 +1,9 @@
 package com.lkup.accounts.controller;
 
+import com.lkup.accounts.document.Environment;
 import com.lkup.accounts.dto.environment.CreateEnvironmentDto;
 import com.lkup.accounts.dto.environment.EnvironmentDto;
 import com.lkup.accounts.dto.environment.UpdateEnvironmentDto;
-import com.lkup.accounts.document.Environment;
 import com.lkup.accounts.mapper.EnvironmentMapper;
 import com.lkup.accounts.service.EnvironmentService;
 import com.lkup.accounts.utilities.PermissionConstants;

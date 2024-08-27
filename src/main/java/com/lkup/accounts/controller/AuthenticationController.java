@@ -1,8 +1,6 @@
 package com.lkup.accounts.controller;
 
 import com.lkup.accounts.document.User;
-import com.lkup.accounts.dto.user.UserDto;
-import com.lkup.accounts.dto.user.UserTeamsDto;
 import com.lkup.accounts.mapper.UserMapper;
 import com.lkup.accounts.service.AuthenticationService;
 import com.lkup.accounts.service.UserService;

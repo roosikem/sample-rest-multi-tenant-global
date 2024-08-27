@@ -1,7 +1,7 @@
 package com.lkup.accounts.service;
 
-import com.lkup.accounts.document.User;
 import com.lkup.accounts.context.jwt.JwtUtils;
+import com.lkup.accounts.document.User;
 import com.lkup.accounts.repository.global.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

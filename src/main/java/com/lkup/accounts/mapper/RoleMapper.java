@@ -1,9 +1,9 @@
 package com.lkup.accounts.mapper;
 
+import com.lkup.accounts.document.Role;
 import com.lkup.accounts.dto.role.CreateRoleDto;
 import com.lkup.accounts.dto.role.RoleDto;
 import com.lkup.accounts.dto.role.UpdateRoleDto;
-import com.lkup.accounts.document.Role;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 

@@ -7,14 +7,12 @@ import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.dto.team.CreateTeamDto;
 import com.lkup.accounts.dto.team.TeamDto;
 import com.lkup.accounts.dto.team.UpdateTeamDto;
-import com.lkup.accounts.dto.user.UserTeamsDto;
 import com.lkup.accounts.repository.global.OrganizationRepository;
 import com.lkup.accounts.repository.global.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class TeamMapper {

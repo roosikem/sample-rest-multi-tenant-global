@@ -1,11 +1,10 @@
 package com.lkup.accounts.dto.deployment;
 
 import com.lkup.accounts.dto.configuration.ConfigurationDto;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @Setter

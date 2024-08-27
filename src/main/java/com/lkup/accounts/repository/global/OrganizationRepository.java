@@ -16,6 +16,7 @@ public interface OrganizationRepository extends MongoRepository<Organization, St
 
     @Query(value = "{}", count = true)
     long countAll();
+
     @Override
     <S extends Organization> S save(S entity);
 

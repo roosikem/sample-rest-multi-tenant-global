@@ -1,7 +1,5 @@
 package com.lkup.accounts.dto.user;
 
-import com.lkup.accounts.dto.organization.OrganizationDto;
-import com.lkup.accounts.dto.team.TeamDto;
 import lombok.Getter;
 import lombok.Setter;
 

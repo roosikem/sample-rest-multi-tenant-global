@@ -1,19 +1,18 @@
 package com.lkup.accounts.service;
 
-import com.lkup.accounts.document.Team;
 import com.lkup.accounts.document.Organization;
+import com.lkup.accounts.document.Team;
 import com.lkup.accounts.exceptions.BadRequestException;
 import com.lkup.accounts.exceptions.organization.OrganizationNotFoundException;
 import com.lkup.accounts.exceptions.team.TeamNotFoundException;
+import com.lkup.accounts.repository.global.OrganizationRepository;
 import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.global.UserRepository;
-import com.lkup.accounts.repository.global.OrganizationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +40,8 @@ public class TeamService {
         Organization organization = organizationRepository.findById(organizationId)
                 .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + organizationId + " not found"));
 
-        Optional<Team> teamDb =  teamRepository.findByNameAndOrganizationId(team.getName(), team.getOrganization().getId());
-        if(teamDb.isPresent()) {
+        Optional<Team> teamDb = teamRepository.findByNameAndOrganizationId(team.getName(), team.getOrganization().getId());
+        if (teamDb.isPresent()) {
             throw new BadRequestException("Team with name already exist - " + team.getName() + "");
         }
         team.setOrganization(organization);
@@ -69,14 +68,14 @@ public class TeamService {
     public Optional<Team> updateTeam(Team team, List<String> userIds, String id, String organizationId) {
         Team existingTeam = teamRepository.findById(id)
                 .orElseThrow(() -> new TeamNotFoundException("Team with id " + team.getId() + " not found"));
-        Optional<Team> teamDb =  teamRepository.findByNameAndOrganizationId(team.getName(), team.getOrganization().getId());
-        if(teamDb.isPresent() && !teamDb.get().getId().equals(id)) {
+        Optional<Team> teamDb = teamRepository.findByNameAndOrganizationId(team.getName(), team.getOrganization().getId());
+        if (teamDb.isPresent() && !teamDb.get().getId().equals(id)) {
             throw new BadRequestException("Team with name already exist - " + team.getName() + "");
         }
         team.setId(null);  // Set the id of the team object to null
         BeanUtils.copyProperties(team, existingTeam, "_id", "users");
 
-        if(organizationId != null && !organizationId.isEmpty()  && !organizationId.isBlank()){
+        if (organizationId != null && !organizationId.isEmpty() && !organizationId.isBlank()) {
             Organization organization = organizationRepository.findById(organizationId)
                     .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + organizationId + " not found"));
             existingTeam.setOrganization(organization);

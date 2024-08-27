@@ -1,9 +1,9 @@
 package com.lkup.accounts.controller;
 
 import com.lkup.accounts.document.Team;
-import com.lkup.accounts.document.User;
-import com.lkup.accounts.dto.team.*;
-import com.lkup.accounts.exceptions.user.UserNotFoundException;
+import com.lkup.accounts.dto.team.CreateTeamDto;
+import com.lkup.accounts.dto.team.TeamDto;
+import com.lkup.accounts.dto.team.UpdateTeamDto;
 import com.lkup.accounts.mapper.TeamMapper;
 import com.lkup.accounts.service.TeamService;
 import com.lkup.accounts.service.UserService;
@@ -33,7 +33,7 @@ public class TeamController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('" + PermissionConstants.ADMINISTRATOR + "','" + PermissionConstants.CREATE_TEAM + "')")
-    public ResponseEntity<TeamDto> createTeam(@RequestBody CreateTeamDto createTeamDto){
+    public ResponseEntity<TeamDto> createTeam(@RequestBody CreateTeamDto createTeamDto) {
         Team team = teamMapper.convertCreateTeamDtoToTeam(createTeamDto);
         Team createdTeam = teamService.createTeam(team, createTeamDto.getOrganization());
         TeamDto teamDto = teamMapper.convertTeamToDto(createdTeam);
@@ -42,7 +42,7 @@ public class TeamController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('" + PermissionConstants.ADMINISTRATOR + "', '" + PermissionConstants.VIEW_TEAM + "' ,'" + PermissionConstants.CREATE_TEAM + "')")
-    public ResponseEntity<List<TeamDto>> getAllTeams(){
+    public ResponseEntity<List<TeamDto>> getAllTeams() {
         List<Team> allTeams = teamService.findAllTeams();
         List<TeamDto> allTeamDtos = allTeams.stream()
                 .map(teamMapper::convertTeamToDto)

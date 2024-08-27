@@ -1,9 +1,9 @@
 package com.lkup.accounts.controller;
 
+import com.lkup.accounts.document.Role;
 import com.lkup.accounts.dto.role.CreateRoleDto;
 import com.lkup.accounts.dto.role.RoleDto;
 import com.lkup.accounts.dto.role.UpdateRoleDto;
-import com.lkup.accounts.document.Role;
 import com.lkup.accounts.mapper.RoleMapper;
 import com.lkup.accounts.service.RoleService;
 import com.lkup.accounts.utilities.PermissionConstants;

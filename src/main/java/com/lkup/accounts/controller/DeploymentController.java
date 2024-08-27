@@ -44,14 +44,14 @@ public class DeploymentController {
         Deployment deployment = deploymentMapper.convertCreateDtoToDeployment(createDeploymentdto);
         Deployment createDeployment = deploymentService.createDeployment(deployment);
         Optional<Deployment> publishDeployment = deploymentService.publishConfiguration(createDeployment);
-        if(publishDeployment.isPresent())
+        if (publishDeployment.isPresent())
             createDeployment = publishDeployment.get();
         DeploymentDto responseDeploymentDto = deploymentMapper.convertDeploymentToDto(createDeployment);
         return ResponseEntity.created(URI.create("/api/v1/deployments/" + responseDeploymentDto.getId())).body(responseDeploymentDto);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('" + PermissionConstants.ADMINISTRATOR +"', '" + PermissionConstants.VIEW_DEPLOYMENT + "','" + PermissionConstants.CREATE_DEPLOYMENT + "')")
+    @PreAuthorize("hasAnyAuthority('" + PermissionConstants.ADMINISTRATOR + "', '" + PermissionConstants.VIEW_DEPLOYMENT + "','" + PermissionConstants.CREATE_DEPLOYMENT + "')")
     public ResponseEntity<DeploymentDto> getDeploymentById(@PathVariable String id) {
         Optional<Deployment> deployment = deploymentService.findDeploymentById(id);
         return deployment.map(deploymentMapper::convertDeploymentToDto)
@@ -64,7 +64,7 @@ public class DeploymentController {
     public ResponseEntity<DeploymentDto> updateDeployment(@PathVariable String id, @RequestBody @Validated UpdateDeploymentDto deploymentDto) {
         deploymentDto.setId(id);
         Optional<Deployment> updatedDeployment = deploymentService.updateDeployment(deploymentMapper.convertUpdateDtoToDeployment(deploymentDto));
-        if(updatedDeployment.isPresent())
+        if (updatedDeployment.isPresent())
             updatedDeployment = deploymentService.publishConfiguration(updatedDeployment.get());
         return updatedDeployment.map(deploymentMapper::convertDeploymentToDto)
                 .map(ResponseEntity::ok)

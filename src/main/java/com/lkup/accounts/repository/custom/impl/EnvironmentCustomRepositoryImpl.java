@@ -78,6 +78,6 @@ public class EnvironmentCustomRepositoryImpl implements EnvironmentCustomReposit
                 Criteria.where("team.id").is(queryCriteria.getTeamId())
         );
         Query query = new Query(criteria);
-        return  mongoTemplate.find(query, Environment.class);
+        return mongoTemplate.find(query, Environment.class);
     }
 }

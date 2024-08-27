@@ -40,6 +40,7 @@ public class OrganizationService {
     public long getTotalOrganizations() {
         return organizationRepository.count();
     }
+
     public Optional<Organization> findOrganizationById(String id) {
         return organizationRepository.findById(id);
     }

@@ -1,13 +1,14 @@
 package com.lkup.accounts.mapper;
 
-import com.lkup.accounts.document.*;
+import com.lkup.accounts.document.Organization;
+import com.lkup.accounts.document.Role;
+import com.lkup.accounts.document.Team;
+import com.lkup.accounts.document.User;
 import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.dto.role.RoleDto;
 import com.lkup.accounts.dto.team.TeamDto;
-import com.lkup.accounts.dto.team.TeamNoUsersDto;
 import com.lkup.accounts.dto.user.CreateUserDto;
 import com.lkup.accounts.dto.user.UpdateUserRequestDto;
-import com.lkup.accounts.dto.user.UserDto;
 import com.lkup.accounts.dto.user.UserTeamsDto;
 import com.lkup.accounts.service.OrganizationService;
 import com.lkup.accounts.service.RoleService;
@@ -77,10 +78,11 @@ public class UserMapper {
 
         List<Team> teams = user.getTeams();
         if (teams != null && !teams.isEmpty()) {
-            userDto.setTeams(modelMapper.map(teams, new TypeToken<List<TeamDto>>() {}.getType()));
+            userDto.setTeams(modelMapper.map(teams, new TypeToken<List<TeamDto>>() {
+            }.getType()));
         }
 
-        if(user.getRole() != null){
+        if (user.getRole() != null) {
             RoleDto roleDto = new RoleDto();
             if (user.getRole().getId() != null) {
                 roleDto.setId(user.getRole().getId());
@@ -103,7 +105,7 @@ public class UserMapper {
         return userDto;
     }
 
-    public User convertCreateDtoToUser(CreateUserDto createUserDto){
+    public User convertCreateDtoToUser(CreateUserDto createUserDto) {
         if (createUserDto == null) {
             return null;
         }
@@ -161,9 +163,9 @@ public class UserMapper {
 
         if (updateUserRequestDto.getTeams() != null) {
             List<Team> teams = new ArrayList<>();
-            for(String teamId : updateUserRequestDto.getTeams() ) {
+            for (String teamId : updateUserRequestDto.getTeams()) {
                 Optional<Team> teamDb = teamService.findTeamById(teamId);
-                if(teamDb.isPresent()) {
+                if (teamDb.isPresent()) {
                     teams.add(teamDb.get());
                 }
 

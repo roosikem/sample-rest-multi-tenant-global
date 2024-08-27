@@ -14,7 +14,7 @@ public interface EnvironmentCustomRepository {
 
     Optional<Environment> findById(QueryCriteria queryCriteria, String id);
 
-     long countAll(QueryCriteria queryCriteria);
+    long countAll(QueryCriteria queryCriteria);
 
-    List<Environment> findAll(QueryCriteria queryCriteria );
+    List<Environment> findAll(QueryCriteria queryCriteria);
 }

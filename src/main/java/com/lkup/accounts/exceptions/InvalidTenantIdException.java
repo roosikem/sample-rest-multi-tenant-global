@@ -1,6 +1,6 @@
 package com.lkup.accounts.exceptions;
 
-public class InvalidTenantIdException extends RuntimeException{
+public class InvalidTenantIdException extends RuntimeException {
     public InvalidTenantIdException() {
         super();
     }

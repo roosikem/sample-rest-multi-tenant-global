@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -28,7 +27,7 @@ public class Organization {
     private String name;
 
     @DBRef
-    private Country  country;
+    private Country country;
 
     @DBRef
     private List<Team> teams;

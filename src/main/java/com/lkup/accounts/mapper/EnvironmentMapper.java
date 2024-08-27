@@ -1,10 +1,10 @@
 package com.lkup.accounts.mapper;
 
+import com.lkup.accounts.document.Environment;
 import com.lkup.accounts.document.Team;
 import com.lkup.accounts.dto.environment.CreateEnvironmentDto;
 import com.lkup.accounts.dto.environment.EnvironmentDto;
 import com.lkup.accounts.dto.environment.UpdateEnvironmentDto;
-import com.lkup.accounts.document.Environment;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +40,7 @@ public class EnvironmentMapper {
         }
         environmentDto.setApiKeys(apiKeyMapper.convertAPIKeysToDtos(environment.getApiKeys()));
         environmentDto.setAppIds(appIdMapper.convertAPPIdsToDtos(environment.getAppIds()));
-        if(null != environment.getOrganization() ) {
+        if (null != environment.getOrganization()) {
             environmentDto.setOrganizationDto(organizationMapper.convertOrganizationToDto(environment.getOrganization()));
         }
         return environmentDto;
@@ -54,13 +54,13 @@ public class EnvironmentMapper {
         if (createEnvironmentDto.getName() != null) {
             environment.setName(createEnvironmentDto.getName());
         }
-        if(createEnvironmentDto.getAppIds() != null) {
+        if (createEnvironmentDto.getAppIds() != null) {
             environment.setAppIds(appIdMapper.convertIdsToAppId(createEnvironmentDto.getAppIds()));
         }
-        if(null != createEnvironmentDto.getOrganizationId() ) {
+        if (null != createEnvironmentDto.getOrganizationId()) {
             environment.setOrganization(organizationMapper.convertOrgIdToOrganization(createEnvironmentDto.getOrganizationId()));
         }
-        if(null != createEnvironmentDto.getTeamId()) {
+        if (null != createEnvironmentDto.getTeamId()) {
             Team team = new Team();
             team.setId(createEnvironmentDto.getTeamId());
             environment.setTeam(team);
@@ -96,10 +96,10 @@ public class EnvironmentMapper {
         }
         environment.setApiKeys(apiKeyMapper.convertIdsToAPIKeys(updateEnvironmentDto.getApiKeys()));
 
-        if(updateEnvironmentDto.getAppIds() != null) {
+        if (updateEnvironmentDto.getAppIds() != null) {
             environment.setAppIds(appIdMapper.convertIdsToAppId(updateEnvironmentDto.getAppIds()));
         }
-        if(null != updateEnvironmentDto.getOrganizationId() ) {
+        if (null != updateEnvironmentDto.getOrganizationId()) {
             environment.setOrganization(organizationMapper.convertOrgIdToOrganization(updateEnvironmentDto.getOrganizationId()));
         }
         return environment;

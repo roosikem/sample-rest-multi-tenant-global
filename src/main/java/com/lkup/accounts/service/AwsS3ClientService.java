@@ -1,7 +1,5 @@
 package com.lkup.accounts.service;
 
-import com.lkup.accounts.config.s3.AmazonS3Config;
-import com.lkup.accounts.config.s3.AwsProperties;
 import com.lkup.accounts.dto.s3.S3Config;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;

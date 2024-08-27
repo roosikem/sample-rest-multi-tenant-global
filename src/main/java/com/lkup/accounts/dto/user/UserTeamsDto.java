@@ -3,7 +3,6 @@ package com.lkup.accounts.dto.user;
 import com.lkup.accounts.dto.organization.OrganizationDto;
 import com.lkup.accounts.dto.role.RoleDto;
 import com.lkup.accounts.dto.team.TeamDto;
-import com.lkup.accounts.dto.team.TeamNoUsersDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

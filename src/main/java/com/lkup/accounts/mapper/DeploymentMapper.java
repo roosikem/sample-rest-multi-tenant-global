@@ -26,7 +26,7 @@ public class DeploymentMapper {
 
     public DeploymentDto convertDeploymentToDto(Deployment deployment) {
         DeploymentDto deploymentDto = modelMapper.map(deployment, DeploymentDto.class);
-        if(null != deployment.getConfiguration())
+        if (null != deployment.getConfiguration())
             deploymentDto.setConfiguration(configurationMapper.convertConfigurationToDto(deployment.getConfiguration()));
         return deploymentDto;
     }
@@ -36,10 +36,10 @@ public class DeploymentMapper {
     }
 
     public Deployment convertCreateDtoToDeployment(CreateDeploymentDto createDeploymentdto) {
-        if(null == createDeploymentdto)
+        if (null == createDeploymentdto)
             return null;
         Deployment deployment = modelMapper.map(createDeploymentdto, Deployment.class);
-        if(null != createDeploymentdto.getConfiguration())
+        if (null != createDeploymentdto.getConfiguration())
             deployment.setConfiguration(configurationRepository.findConfigurationById(createDeploymentdto.getConfiguration().getId()).orElse(null));
 
         return deployment;

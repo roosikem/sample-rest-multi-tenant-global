@@ -1,15 +1,10 @@
 package com.lkup.accounts.dto.environment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lkup.accounts.document.AppId;
-import com.lkup.accounts.dto.organization.CreateOrganizationDto;
-import com.lkup.accounts.dto.organization.OrganizationDto;
-import com.lkup.accounts.dto.apikey.APIKeyDto;
-import com.lkup.accounts.dto.appId.AppIdDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 

@@ -10,11 +10,11 @@ import com.lkup.accounts.exceptions.environment.EnvironmentNotFoundException;
 import com.lkup.accounts.exceptions.environment.EnvironmentServiceException;
 import com.lkup.accounts.exceptions.organization.OrganizationNotFoundException;
 import com.lkup.accounts.exceptions.team.TeamNotFoundException;
-import com.lkup.accounts.repository.global.OrganizationRepository;
-import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.repository.custom.APPIdCustomRepository;
 import com.lkup.accounts.repository.custom.EnvironmentCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
+import com.lkup.accounts.repository.global.OrganizationRepository;
+import com.lkup.accounts.repository.global.TeamRepository;
 import com.lkup.accounts.utilities.RoleChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +86,7 @@ public class EnvironmentService {
             if (environment.getAppIds() != null) {
                 List<String> appIds = environment.getAppIds().stream().map(AppId::getId).filter(id -> !id.isEmpty()).toList();
                 Optional<List<AppId>> dbAppIds = appIdRepository.findByIds(queryCriteria, appIds);
-                if(!dbAppIds.isPresent() || dbAppIds.get().isEmpty()) {
+                if (!dbAppIds.isPresent() || dbAppIds.get().isEmpty()) {
                     throw new BadRequestException("Wrong Appids ");
                 }
                 dbAppIds.ifPresent(environment::setAppIds);

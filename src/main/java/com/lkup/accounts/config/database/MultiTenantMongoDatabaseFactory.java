@@ -32,7 +32,8 @@ public class MultiTenantMongoDatabaseFactory implements MongoDatabaseFactory {
 
     @Override
     public MongoDatabase getMongoDatabase() throws DataAccessException {
-        String tenantId =   RequestContext.getRequestContext().getTenantId();;
+        String tenantId = RequestContext.getRequestContext().getTenantId();
+        ;
         return mongoClient.getDatabase(tenantId);
     }
 

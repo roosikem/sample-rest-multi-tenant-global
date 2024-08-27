@@ -1,9 +1,9 @@
 package com.lkup.accounts.controller;
 
 import com.lkup.accounts.document.Role;
+import com.lkup.accounts.document.User;
 import com.lkup.accounts.dto.user.CreateUserDto;
 import com.lkup.accounts.dto.user.UpdateUserRequestDto;
-import com.lkup.accounts.document.User;
 import com.lkup.accounts.dto.user.UserTeamsDto;
 import com.lkup.accounts.mapper.UserMapper;
 import com.lkup.accounts.service.RoleService;
@@ -36,7 +36,7 @@ public class UserController {
         User user = userMapper.convertCreateDtoToUser(createUserDto);
         Optional<Role> role = roleService.findRoleById(createUserDto.getRoleId());
 
-        if(role.isEmpty())
+        if (role.isEmpty())
             role = roleService.findRoleById("bbc412cb-b430-47f1-8010-6ad4a27a0237");
 
         if (role.isPresent()) {

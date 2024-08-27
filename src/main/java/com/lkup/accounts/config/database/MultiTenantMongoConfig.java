@@ -1,7 +1,6 @@
 package com.lkup.accounts.config.database;
 
 import com.lkup.accounts.config.database.condition.MultiDbTenantCondition;
-import com.lkup.accounts.config.database.condition.SingleDbTenantCondition;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +23,7 @@ public class MultiTenantMongoConfig {
 
     @Bean
     public MongoDatabaseFactory mongoDatabaseFactory() {
-     return new MultiTenantMongoDatabaseFactory(mongoClient());
+        return new MultiTenantMongoDatabaseFactory(mongoClient());
 
     }
 

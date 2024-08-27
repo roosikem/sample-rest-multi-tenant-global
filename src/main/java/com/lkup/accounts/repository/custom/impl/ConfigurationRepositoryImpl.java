@@ -62,7 +62,7 @@ public class ConfigurationRepositoryImpl implements ConfigurationCustomRepositor
                 Criteria.where("team.id").is(queryCriteria.getTeamId())
         );
         Query query = new Query(criteria);
-       return  mongoTemplate.count(query, Configuration.class);
+        return mongoTemplate.count(query, Configuration.class);
     }
 
     @Override

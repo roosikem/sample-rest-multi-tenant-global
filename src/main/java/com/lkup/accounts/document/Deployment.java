@@ -24,14 +24,14 @@ public class Deployment {
     private String deploymentName;
 
     @DBRef
-    private User  assigneduser;
+    private User assigneduser;
 
     private Organization organization;
 
     private Team team;
 
     @DBRef
-    private Configuration  configuration;
+    private Configuration configuration;
 
     private Boolean status = false;
 

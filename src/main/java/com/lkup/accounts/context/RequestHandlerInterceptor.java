@@ -3,20 +3,15 @@ package com.lkup.accounts.context;
 import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.document.Team;
 import com.lkup.accounts.document.User;
-import com.lkup.accounts.dto.organization.OrganizationDto;
-import com.lkup.accounts.exceptions.BadRequestException;
 import com.lkup.accounts.exceptions.InvalidTeamIdException;
 import com.lkup.accounts.exceptions.InvalidTenantIdException;
 import com.lkup.accounts.service.OrganizationService;
 import com.lkup.accounts.service.TeamService;
-import com.lkup.accounts.utilities.PermissionConstants;
 import com.lkup.accounts.utilities.RoleChecker;
-import com.lkup.accounts.utilities.RoleConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,27 +37,27 @@ public class RequestHandlerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String teamId = request.getHeader("X-TeamId");
         String tenantId = request.getHeader("X-TenantId");
-        if(!roleChecker.hasSuperAdminRole()) {
-            if(Objects.isNull(tenantId))
+        if (!roleChecker.hasSuperAdminRole()) {
+            if (Objects.isNull(tenantId))
                 throw new InvalidTenantIdException("tenantId is missing");
-            if(Objects.isNull(teamId)) {
+            if (Objects.isNull(teamId)) {
                 throw new InvalidTeamIdException("Team Id is missing");
             }
 
-            User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if(!principal.getOrganization().getId().equalsIgnoreCase(tenantId)) {
+            User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!principal.getOrganization().getId().equalsIgnoreCase(tenantId)) {
                 throw new InvalidTenantIdException("User is not authorized for this action.");
             }
 
             Optional<Organization> organization = organizationService.findOrganizationById(tenantId);
-            if(!organization.isPresent())
+            if (!organization.isPresent())
                 throw new InvalidTenantIdException("invalid tenant id");
 
-            if(!roleChecker.hasUserTeamAccess(teamId)) {
+            if (!roleChecker.hasUserTeamAccess(teamId)) {
                 throw new InvalidTenantIdException("User is not authorized for this action.");
             }
             Optional<Team> team = teamService.findTeamById(teamId);
-            if(!team.isPresent())
+            if (!team.isPresent())
                 throw new InvalidTenantIdException("invalid team id");
         }
 

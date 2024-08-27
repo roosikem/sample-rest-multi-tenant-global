@@ -9,7 +9,6 @@ import com.lkup.accounts.dto.team.TeamDto;
 import com.lkup.accounts.repository.global.CountryRepository;
 import com.lkup.accounts.repository.global.TeamRepository;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Normalized;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

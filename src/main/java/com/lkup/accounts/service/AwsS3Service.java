@@ -4,17 +4,15 @@ package com.lkup.accounts.service;
 import com.lkup.accounts.config.s3.AwsProperties;
 import com.lkup.accounts.document.Environment;
 import com.lkup.accounts.dto.s3.S3Config;
-import com.lkup.accounts.enums.EnvironmentType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
-
-import java.util.Objects;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
+import software.amazon.awssdk.services.s3.model.CopyObjectResponse;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 
 @Slf4j
@@ -28,7 +26,6 @@ public class AwsS3Service {
         this.awsS3ClientService = awsS3ClientService;
         this.awsProperties = awsProperties;
     }
-
 
 
     public String uploadJsonData(String key, String jsonData, Environment environment) {

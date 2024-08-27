@@ -19,7 +19,7 @@ public interface DeploymentCustomRepository {
 
     <S extends Deployment> S save(S entity);
 
-     void deleteDeployment(QueryCriteria queryCriteria, String id);
+    void deleteDeployment(QueryCriteria queryCriteria, String id);
 
     Optional<Deployment> findById(QueryCriteria queryCriteria, String id);
 }

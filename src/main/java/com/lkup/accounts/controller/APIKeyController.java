@@ -1,9 +1,9 @@
 package com.lkup.accounts.controller;
 
+import com.lkup.accounts.document.APIKey;
 import com.lkup.accounts.dto.apikey.APIKeyDto;
 import com.lkup.accounts.dto.apikey.CreateAPIKeyDto;
 import com.lkup.accounts.dto.apikey.UpdateAPIKeyRequestDto;
-import com.lkup.accounts.document.APIKey;
 import com.lkup.accounts.mapper.APIKeyMapper;
 import com.lkup.accounts.service.APIKeyService;
 import com.lkup.accounts.utilities.PermissionConstants;
@@ -15,12 +15,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import static com.lkup.accounts.utilities.PermissionConstants.CREATE_API_KEY;
-import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAnyAuthority;
-
 @RestController
 @RequestMapping("/api/v1/keys")
-public class APIKeyController{
+public class APIKeyController {
 
     private final APIKeyService apiKeyService;
     private final APIKeyMapper apiKeyMapper;

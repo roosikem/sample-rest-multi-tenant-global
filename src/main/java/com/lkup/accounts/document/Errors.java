@@ -1,9 +1,7 @@
-
 package com.lkup.accounts.document;
 
 import lombok.Getter;
 import lombok.Setter;
-
 
 
 @Getter

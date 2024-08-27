@@ -26,7 +26,7 @@ public class AppIdDto {
     private Date updatedAt;
 
 
-    public AppIdDto(String name, String appId, String description, String organization, String team){
+    public AppIdDto(String name, String appId, String description, String organization, String team) {
         this.name = name;
         this.appId = appId;
         this.description = description;

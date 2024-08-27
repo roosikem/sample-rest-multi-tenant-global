@@ -1,7 +1,6 @@
 package com.lkup.accounts.utilities;
 
 import com.lkup.accounts.context.RequestContext;
-import com.lkup.accounts.document.Role;
 import com.lkup.accounts.exceptions.BadRequestException;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +30,7 @@ public class OrganizationTeamValidator {
             requestTeamId = teamId;
         }
 
-        if(!roleChecker.hasUserAccessTeamAndOrganization(requestTenantId, requestTeamId)) {
+        if (!roleChecker.hasUserAccessTeamAndOrganization(requestTenantId, requestTeamId)) {
             throw new BadRequestException("User not authorized to perform this action");
         }
         return true;
