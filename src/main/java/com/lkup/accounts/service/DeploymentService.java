@@ -7,6 +7,7 @@ import com.lkup.accounts.config.s3.AwsProperties;
 import com.lkup.accounts.context.RequestContext;
 import com.lkup.accounts.document.Configuration;
 import com.lkup.accounts.document.Deployment;
+import com.lkup.accounts.exceptions.BadRequestException;
 import com.lkup.accounts.exceptions.aws.AwsS3UploadException;
 import com.lkup.accounts.exceptions.deployment.DeploymentNotFoundException;
 import com.lkup.accounts.exceptions.deployment.DeploymentServiceException;
@@ -53,6 +54,11 @@ public class DeploymentService {
     public Deployment createDeployment(Deployment deployment) {
         deployment.setId(defaultUUIDGenerator.generateId());
         try {
+            Optional<Configuration> configuration = configurationService.findConfigurationById(deployment.getConfiguration().getId());
+            if(configuration.isEmpty()) {
+                throw new BadRequestException("Invalid Configuration ID");
+            }
+            deployment.setConfiguration(configuration.get());
             return deploymentRepository.save(deployment);
         } catch (Exception e) {
             logger.error("Error creating deployment", e);
@@ -113,20 +119,26 @@ public class DeploymentService {
     public String awsUpload(Deployment deployment) {
         String url = null;
         Configuration configuration = deployment.getConfiguration();
+        if(!Objects.nonNull(configuration.getWidgetConfig())) {
+            throw  new BadRequestException("widget configuration is null");
+        }
         url = publishConfiguration(configuration, deployment.getPublishConfigUrl());
         return url;
     }
 
     private String publishConfiguration(Configuration configuration, String publishUrl) {
         String url = null;
+        boolean isOverriding = false;
         if (Objects.nonNull(configuration)) {
             if (Objects.isNull(publishUrl) || publishUrl.isEmpty()) {
                 publishUrl = createPublishUrl(configuration);
+            } else{
+                isOverriding = true;
             }
             ObjectMapper mapper = new ObjectMapper();
             try {
                 JsonNode actualObj = mapper.readTree((String) configuration.getWidgetConfig());
-                url = awsS3Service.uploadJsonData(publishUrl, mapper.writeValueAsString(actualObj), configuration.getEnvironment());
+                url = awsS3Service.uploadJsonData(publishUrl, mapper.writeValueAsString(actualObj), configuration.getEnvironment(), isOverriding);
             } catch (JsonProcessingException e) {
                 throw new AwsS3UploadException("InValid json");
             }
@@ -136,10 +148,7 @@ public class DeploymentService {
 
     private String createPublishUrl(Configuration configuration) {
         StringBuilder uriBuilder = new StringBuilder();
-        if (Objects.nonNull(awsProperties.getDirectory()) && !awsProperties.getDirectory().isEmpty()) {
-            uriBuilder.append(awsProperties.getDirectory()).append("/");
-        }
-        uriBuilder.append(configuration.getId()).append("_");
+
         Optional.ofNullable(configuration.getOrganization().getName()).ifPresent(uriBuilder::append);
         uriBuilder.append("_");
         Optional.ofNullable(configuration.getEnvironment()).ifPresent(uriBuilder::append);

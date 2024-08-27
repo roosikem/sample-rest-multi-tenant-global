@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -40,11 +41,18 @@ public class EnvironmentCustomRepositoryImpl implements EnvironmentCustomReposit
 
     @Override
     public void deleteById(QueryCriteria queryCriteria, String id) {
-        Criteria criteria = new Criteria().andOperator(
-                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
-                Criteria.where("team.id").is(queryCriteria.getTeamId()),
-                Criteria.where("id").is(id)
-        );
+        Criteria criteria = null;
+        if(Objects.nonNull(queryCriteria.getTenantId()) && Objects.nonNull(queryCriteria.getTeamId())) {
+            criteria = new Criteria().andOperator(
+                    Criteria.where("organization.id").is(queryCriteria.getTenantId()),
+                    Criteria.where("team.id").is(queryCriteria.getTeamId()),
+                    Criteria.where("id").is(id)
+            );
+        } else{
+            criteria = new Criteria().andOperator(
+                    Criteria.where("id").is(id)
+            );
+        }
         Query query = new Query(criteria);
         mongoTemplate.remove(query, Environment.class);
     }

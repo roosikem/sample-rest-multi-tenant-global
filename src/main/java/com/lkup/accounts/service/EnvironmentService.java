@@ -15,6 +15,7 @@ import com.lkup.accounts.repository.custom.EnvironmentCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
 import com.lkup.accounts.repository.global.OrganizationRepository;
 import com.lkup.accounts.repository.global.TeamRepository;
+import com.lkup.accounts.utilities.OrganizationTeamValidator;
 import com.lkup.accounts.utilities.RoleChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,11 @@ public class EnvironmentService {
     private final OrganizationRepository organizationRepository;
     private final APPIdCustomRepository appIdRepository;
     private final TeamRepository teamRepository;
-    private final RoleChecker roleChecker;
+    private final OrganizationTeamValidator organizationTeamValidator;
 
-    public EnvironmentService(RoleChecker roleChecker, EnvironmentCustomRepository environmentRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
+    public EnvironmentService(OrganizationTeamValidator organizationTeamValidator, EnvironmentCustomRepository environmentRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
                               OrganizationRepository organizationRepository, APPIdCustomRepository appIdRepository, TeamRepository teamRepository) {
-        this.roleChecker = roleChecker;
+        this.organizationTeamValidator = organizationTeamValidator;
         this.environmentRepository = environmentRepository;
         this.defaultUUIDGenerator = defaultUUIDGenerator;
         this.organizationRepository = organizationRepository;
@@ -53,23 +54,9 @@ public class EnvironmentService {
         Objects.requireNonNull(environment.getTeam().getId());
         environment.setId(defaultUUIDGenerator.generateId());
         try {
-            String requestTenantId = null;
-            String requestTeamId = null;
-            if (!roleChecker.hasSuperAdminRole()) {
-                requestTenantId = RequestContext.getRequestContext().getTenantId();
-                requestTeamId = RequestContext.getRequestContext().getTeamId();
-
-                if (!requestTeamId.equals(environment.getTeam().getId())) {
-                    throw new BadRequestException("Invalid Team ID. Team ID should match the team ID in request");
-                }
-                if (!requestTenantId.equals(environment.getOrganization().getId())) {
-                    throw new BadRequestException("Invalid Tenant ID. Tenant ID should match the tenant ID in request");
-                }
-            } else {
-                requestTenantId = environment.getOrganization().getId();
-                requestTeamId = environment.getTeam().getId();
-            }
-
+            String requestTenantId = environment.getOrganization().getId();
+            String requestTeamId = environment.getTeam().getId();
+            organizationTeamValidator.validateOrganizationTeam(requestTenantId, requestTeamId);
             QueryCriteria queryCriteria = new QueryCriteria();
             queryCriteria.setTenantId(requestTenantId);
             queryCriteria.setTeamId(requestTeamId);
@@ -125,22 +112,9 @@ public class EnvironmentService {
         Objects.requireNonNull(environment.getOrganization());
         Objects.requireNonNull(environment.getOrganization().getId());
         Objects.requireNonNull(environment.getTeam().getId());
-        String requestTenantId = null;
-        String requestTeamId = null;
-        if (!roleChecker.hasSuperAdminRole()) {
-            requestTenantId = RequestContext.getRequestContext().getTenantId();
-            requestTeamId = RequestContext.getRequestContext().getTeamId();
-
-            if (!requestTeamId.equals(environment.getTeam().getId())) {
-                throw new BadRequestException("Invalid Team ID. Team ID should match the team ID in request");
-            }
-            if (!requestTenantId.equals(environment.getOrganization().getId())) {
-                throw new BadRequestException("Invalid Tenant ID. Tenant ID should match the tenant ID in request");
-            }
-        } else {
-            requestTenantId = environment.getOrganization().getId();
-            requestTeamId = environment.getTeam().getId();
-        }
+        String requestTenantId = environment.getOrganization().getId();
+        String requestTeamId = environment.getTeam().getId();
+        organizationTeamValidator.validateOrganizationTeam(requestTenantId, requestTeamId);
 
         QueryCriteria queryCriteria = new QueryCriteria();
         queryCriteria.setTenantId(requestTenantId);

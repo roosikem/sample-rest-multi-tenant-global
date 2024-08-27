@@ -14,7 +14,7 @@ public interface APPIdCustomRepository {
 
     void deleteById(QueryCriteria queryCriteria, String id);
 
-    Optional<AppId> findById(QueryCriteria queryCriteria, String id);
+    Optional<AppId> findById(String id);
 
     long countAll(QueryCriteria queryCriteria);
 
@@ -27,4 +27,6 @@ public interface APPIdCustomRepository {
     void deleteAll(QueryCriteria queryCriteria);
 
     List<AppId> findByTenantAndTeamId(QueryCriteria queryCriteria);
+
+    Optional<AppId> findByIdAndOrgTeam(QueryCriteria queryCriteria, String id);
 }

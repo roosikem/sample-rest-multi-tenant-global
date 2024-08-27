@@ -45,7 +45,8 @@ public class GtpAccountsApplication {
         SpringApplication.run(GtpAccountsApplication.class, args);
     }
 
-    static final String defaultConfig = "";
+    static final String defaultConfig = "{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"firstName\": \"Emily\",\n      \"lastName\": \"Johnson\",\n      \"maidenName\": \"Smith\",\n      \"age\": 28,\n      \"gender\": \"female\",\n      \"email\": \"emily.johnson@x.dummyjson.com\",\n      \"phone\": \"+81 965-431-3024\",\n      \"username\": \"emilys\",\n      \"password\": \"emilyspass\",\n      \"birthDate\": \"1996-5-30\",\n      \"image\": \"...\",\n      \"bloodGroup\": \"O-\",\n      \"height\": 193.24,\n      \"weight\": 63.16,\n      \"eyeColor\": \"Green\",\n      \"hair\": {\n        \"color\": \"Brown\",\n        \"type\": \"Curly\"\n      },\n      \"ip\": \"42.48.100.32\",\n      \"address\": {\n        \"address\": \"626 Main Street\",\n        \"city\": \"Phoenix\",\n        \"state\": \"Mississippi\",\n        \"stateCode\": \"MS\",\n        \"postalCode\": \"29112\",\n        \"coordinates\": {\n          \"lat\": -77.16213,\n          \"lng\": -92.084824\n        },\n        \"country\": \"United States\"\n      },\n      \"macAddress\": \"47:fa:41:18:ec:eb\",\n      \"university\": \"University of Wisconsin--Madison\",\n      \"bank\": {\n        \"cardExpire\": \"03/26\",\n        \"cardNumber\": \"9289760655481815\",\n        \"cardType\": \"Elo\",\n        \"currency\": \"CNY\",\n        \"iban\": \"YPUXISOBI7TTHPK2BR3HAIXL\"\n      },\n      \"company\": {\n        \"department\": \"Engineering\",\n        \"name\": \"Dooley, Kozey and Cronin\",\n        \"title\": \"Sales Manager\",\n        \"address\": {\n          \"address\": \"263 Tenth Street\",\n          \"city\": \"San Francisco\",\n          \"state\": \"Wisconsin\",\n          \"stateCode\": \"WI\",\n          \"postalCode\": \"37657\",\n          \"coordinates\": {\n            \"lat\": 71.814525,\n            \"lng\": -161.150263\n          },\n          \"country\": \"United States\"\n        }\n      },\n      \"ein\": \"977-175\",\n      \"ssn\": \"900-590-289\",\n      \"userAgent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36\",\n      \"crypto\": {\n        \"coin\": \"Bitcoin\",\n        \"wallet\": \"0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a\",\n        \"network\": \"Ethereum (ERC20)\"\n      },\n      \"role\": \"admin\" // or \"moderator\", or \"user\"\n    },\n    {...},\n    {...}\n    // 30 items\n  ],\n  \"total\": 208,\n  \"skip\": 0,\n  \"limit\": 30\n}";
+
     @Value("${root.username}")
     private String username;
 
@@ -201,13 +202,13 @@ public class GtpAccountsApplication {
 
 
                 CreateEnvironmentDto environmentDto = createEnvDto(organizationDto, teamDto, "DEV", DEV_URL,
-                        DEV_URL, appIdsGroupDev, defaultConfig);
+                        DEV_URL, appIdsGroupDev, defaultConfig, "DEV");
 
                 environmentMapper.convertEnvironmentToCreateDto(
                         environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto)));
 
                 CreateEnvironmentDto environmentDto2 = createEnvDto(organizationDto, teamDto, "QA", QA_URL,
-                        QA_URL, appIdsGroupQa, defaultConfig);
+                        QA_URL, appIdsGroupQa, defaultConfig, "QA");
 
                 environmentMapper.convertEnvironmentToCreateDto(
                         environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto2)));
@@ -225,7 +226,7 @@ public class GtpAccountsApplication {
         return organizationDto;
     }
 
-    private static CreateEnvironmentDto createEnvDto(OrganizationDto organizationDto, TeamDto teamDto, String environmentName, String gatewayURL, String tokenURL, List<AppIdDto> appIds, String defaultConfig) {
+    private static CreateEnvironmentDto createEnvDto(OrganizationDto organizationDto, TeamDto teamDto, String environmentName, String gatewayURL, String tokenURL, List<AppIdDto> appIds, String defaultConfig, String envType) {
 
         CreateEnvironmentDto environment = createEnvironment(environmentName, gatewayURL, tokenURL);
         environment.setId(UUID.randomUUID().toString());
@@ -233,6 +234,7 @@ public class GtpAccountsApplication {
         environment.setAppIds(appIds.stream().map(AppIdDto::getId).toList());
         environment.setOrganizationId(organizationDto.getId());
         environment.setTeamId(teamDto.getId());
+        environment.setEnvironmentType(envType);
         return environment;
     }
 

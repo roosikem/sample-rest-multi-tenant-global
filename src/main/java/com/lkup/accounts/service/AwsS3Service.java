@@ -14,6 +14,8 @@ import software.amazon.awssdk.services.s3.model.CopyObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+import java.util.Objects;
+
 
 @Slf4j
 @Service
@@ -28,9 +30,12 @@ public class AwsS3Service {
     }
 
 
-    public String uploadJsonData(String key, String jsonData, Environment environment) {
+    public String uploadJsonData(String key, String jsonData, Environment environment, boolean isOverriding) {
         Assert.notNull(environment.getEnvironmentType(), "Environment Type can not be blank");
         S3Config config = awsS3ClientService.getS3Config(environment.getEnvironmentType());
+        if (!isOverriding && Objects.nonNull(config.getDirectory()) && !config.getDirectory().isEmpty()) {
+            key = config.getDirectory() + "/" + key;;
+        }
         S3Client s3Client = buildS3Client(config);
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()

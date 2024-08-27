@@ -56,7 +56,7 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
     }
 
     @Override
-    public Optional<AppId> findById(QueryCriteria queryCriteria, String id) {
+    public Optional<AppId> findById(String id) {
         Criteria criteria = new Criteria().andOperator(
                 Criteria.where("id").is(id)
         );
@@ -106,5 +106,16 @@ public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {
         );
         Query query = new Query(criteria);
         return globalMongoTemplate.find(query, AppId.class);
+    }
+
+    @Override
+    public Optional<AppId> findByIdAndOrgTeam(QueryCriteria queryCriteria, String id) {
+        Criteria criteria = new Criteria().andOperator(
+                Criteria.where("organization.id").is(queryCriteria.getTenantId()),
+                Criteria.where("team.id").is(queryCriteria.getTeamId()),
+                Criteria.where("id").is(id)
+        );
+        Query query = new Query(criteria);
+        return Optional.ofNullable(globalMongoTemplate.findOne(query, AppId.class));
     }
 }

@@ -10,6 +10,7 @@ import com.lkup.accounts.exceptions.apikey.APIKeyNotFoundException;
 import com.lkup.accounts.exceptions.apikey.APIKeyServiceException;
 import com.lkup.accounts.repository.custom.APPIdCustomRepository;
 import com.lkup.accounts.repository.custom.QueryCriteria;
+import com.lkup.accounts.utilities.OrganizationTeamValidator;
 import com.lkup.accounts.utilities.RoleChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +29,15 @@ public class APPIdService {
     private final DefaultUUIDGeneratorService defaultUUIDGenerator;
     private final OrganizationService organizationService;
     private final TeamService teamService;
-    private final RoleChecker roleChecker;
+    private final OrganizationTeamValidator organizationTeamValidator;
 
-    public APPIdService(RoleChecker roleChecker, APPIdCustomRepository appIdRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
+    public APPIdService(OrganizationTeamValidator organizationTeamValidator, APPIdCustomRepository appIdRepository, DefaultUUIDGeneratorService defaultUUIDGenerator,
                         OrganizationService organizationService, TeamService teamService) {
         this.appIdRepository = appIdRepository;
         this.defaultUUIDGenerator = defaultUUIDGenerator;
         this.organizationService = organizationService;
         this.teamService = teamService;
-        this.roleChecker = roleChecker;
+        this.organizationTeamValidator = organizationTeamValidator;
     }
 
     public AppId createAPPId(AppId appId) {
@@ -80,14 +81,17 @@ public class APPIdService {
 
     public Optional<AppId> findAppIdById(String id) {
         QueryCriteria queryCriteria = new QueryCriteria();
-        queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
-        queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
-        return appIdRepository.findById(queryCriteria, id);
+        if(!organizationTeamValidator.isSuperAdmin()) {
+            queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
+            queryCriteria.setTeamId(RequestContext.getRequestContext().getTeamId());
+            return appIdRepository.findByIdAndOrgTeam(queryCriteria, id);
+        }
+        return appIdRepository.findById(id);
     }
 
     public List<AppId> findAllAppIdsKeys() {
         QueryCriteria queryCriteria = new QueryCriteria();
-        if (roleChecker.hasSuperAdminRole()) {
+        if (organizationTeamValidator.isSuperAdmin()) {
             return appIdRepository.findAllAppIds(queryCriteria);
         } else {
             queryCriteria.setTenantId(RequestContext.getRequestContext().getTenantId());
@@ -108,7 +112,7 @@ public class APPIdService {
         QueryCriteria queryCriteria = new QueryCriteria();
         queryCriteria.setTenantId(appId.getOrganization().getId());
         queryCriteria.setTeamId(appId.getTeam().getId());
-        Optional<AppId> existingAPIKeyOptional = appIdRepository.findById(queryCriteria, appId.getId());
+        Optional<AppId> existingAPIKeyOptional = appIdRepository.findById(appId.getId());
         Optional<AppId> existAppId = appIdRepository.validateExisting(queryCriteria, appId.getName(), appId.getAppId());
 
         if (existingAPIKeyOptional.isPresent()) {

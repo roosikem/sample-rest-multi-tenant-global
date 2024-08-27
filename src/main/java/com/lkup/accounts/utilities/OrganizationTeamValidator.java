@@ -35,4 +35,8 @@ public class OrganizationTeamValidator {
         }
         return true;
     }
+
+    public boolean isSuperAdmin() {
+        return roleChecker.hasSuperAdminRole();
+    }
 }
