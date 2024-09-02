@@ -71,7 +71,7 @@ public class GtpAccountsApplication {
         return args -> {
 
 
-            if (false) {
+            if (true) {
                 Country ie = new Country(defaultUUIDGeneratorService.generateId(), "Ireland", "IE");
                 countryRepository.deleteAll();
                 countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), "Ethiopia", "ET"));
@@ -201,17 +201,17 @@ public class GtpAccountsApplication {
                 List<AppIdDto> appIdsGroupQa = List.of(groupQaAppId1, groupQaAppId2);
 
 
-                CreateEnvironmentDto environmentDto = createEnvDto(organizationDto, teamDto, "DEV", DEV_URL,
-                        DEV_URL, appIdsGroupDev, defaultConfig, "DEV");
-
-                environmentMapper.convertEnvironmentToCreateDto(
-                        environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto)));
-
-                CreateEnvironmentDto environmentDto2 = createEnvDto(organizationDto, teamDto, "QA", QA_URL,
-                        QA_URL, appIdsGroupQa, defaultConfig, "QA");
-
-                environmentMapper.convertEnvironmentToCreateDto(
-                        environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto2)));
+//                CreateEnvironmentDto environmentDto = createEnvDto(organizationDto, teamDto, "DEV", DEV_URL,
+//                        DEV_URL, appIdsGroupDev, defaultConfig, "DEV");
+//
+//                environmentMapper.convertEnvironmentToCreateDto(
+//                        environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto)));
+//
+//                CreateEnvironmentDto environmentDto2 = createEnvDto(organizationDto, teamDto, "QA", QA_URL,
+//                        QA_URL, appIdsGroupQa, defaultConfig, "QA");
+//
+//                environmentMapper.convertEnvironmentToCreateDto(
+//                        environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto2)));
                 System.out.println(teamDto.getId());
                 System.out.println(organizationDto.getId());
                 RequestContext.clearRequestContext();

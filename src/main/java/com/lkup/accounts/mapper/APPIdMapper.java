@@ -1,9 +1,12 @@
 package com.lkup.accounts.mapper;
 
 import com.lkup.accounts.document.AppId;
+import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.document.Team;
 import com.lkup.accounts.dto.appId.AppIdDto;
 import com.lkup.accounts.dto.appId.CreateUpdateAppIdDto;
+import com.lkup.accounts.dto.organization.OrganizationDto;
+import com.lkup.accounts.service.OrganizationService;
 import com.lkup.accounts.service.TeamService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +24,12 @@ public class APPIdMapper {
     private ModelMapper modelMapper;
 
     @Autowired
-    private TeamService teamService;
+    private OrganizationService organizationService;
 
     public AppId convertCreateDtoToAPPIdEntity(CreateUpdateAppIdDto createUpdateAppIdDto) {
         AppId appId = modelMapper.map(createUpdateAppIdDto, AppId.class);
         if (null != createUpdateAppIdDto.getTeam()) {
-            Optional<Team> team = teamService.findTeamById(createUpdateAppIdDto.getTeam());
-            if (team.isPresent()) {
-                appId.setTeam(team.get());
-            }
+            appId.setTeamId(createUpdateAppIdDto.getTeam());
         }
         return modelMapper.map(createUpdateAppIdDto, AppId.class);
     }
@@ -39,7 +39,7 @@ public class APPIdMapper {
     }
 
     public AppIdDto convertAPPIdToDto(AppId appId) {
-        return modelMapper.map(appId, AppIdDto.class);
+         return modelMapper.map(appId, AppIdDto.class);
     }
 
     public List<AppIdDto> convertAPPIdsToDtos(List<AppId> appIds) {

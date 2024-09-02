@@ -61,33 +61,31 @@ public class ConfigurationService {
     public Configuration createConfiguration(Configuration configuration) {
         configuration.setId(defaultUUIDGenerator.generateId());
         configuration.setCreatedAt(new Date());
-        Assert.notNull(configuration.getOrganization(), "Organization can not be empty");
-        Assert.notNull(configuration.getOrganization().getId(), "Organization Id can not be empty");
+        Assert.notNull(configuration.getOrganizationId(), "Organization Id can not be empty");
 
-        Assert.notNull(configuration.getTeam(), "Team can not be empty");
-        Assert.notNull(configuration.getTeam().getId(), "Team Id can not be empty");
+        Assert.notNull(configuration.getTeamId(), "Team Id can not be empty");
         try {
 
-            organizationTeamValidator.validateOrganizationTeam(configuration.getOrganization().getId(), configuration.getTeam().getId());
+            organizationTeamValidator.validateOrganizationTeam(configuration.getOrganizationId(), configuration.getTeamId());
 
             QueryCriteria queryCriteria = new QueryCriteria();
-            queryCriteria.setTenantId(configuration.getOrganization().getId());
-            queryCriteria.setTeamId(configuration.getTeam().getId());
+            queryCriteria.setTenantId(configuration.getOrganizationId());
+            queryCriteria.setTeamId(configuration.getTeamId());
 
             Optional<Configuration> configurationDbName = configurationRepository.findByName(queryCriteria, configuration.getName());
             if (configurationDbName.isPresent())
                 throw new BadRequestException("Configuration already exist with name" + configuration.getName());
 
-            Optional<Organization> organizationDb = organizationRepository.findById(configuration.getOrganization().getId());
+            Optional<Organization> organizationDb = organizationRepository.findById(configuration.getOrganizationId());
             if (organizationDb.isEmpty())
-                throw new BadRequestException("Organization not exist " + configuration.getOrganization().getName());
+                throw new BadRequestException("Organization not exist " + configuration.getOrganizationId());
 
-            Optional<Team> teamDb = teamRepository.findById(configuration.getTeam().getId());
+            Optional<Team> teamDb = teamRepository.findById(configuration.getTeamId());
             if (teamDb.isEmpty())
-                throw new BadRequestException("Team not exist " + configuration.getTeam().getName());
+                throw new BadRequestException("Team not exist " + configuration.getTeamId());
 
-            configuration.setTeam(teamDb.get());
-            configuration.setOrganization(organizationDb.get());
+            configuration.setTeamId(teamDb.get().getId());
+            configuration.setOrganizationId(organizationDb.get().getId());
 
             Object config = configuration.getWidgetConfig();
             if (Objects.nonNull(config)) {
@@ -118,11 +116,13 @@ public class ConfigurationService {
     public Optional<Configuration> updateConfiguration(Configuration configuration) {
         Assert.notNull(configuration.getId(), "Configuration ID cannot be null for update");
         try {
-            organizationTeamValidator.validateOrganizationTeam(configuration.getOrganization().getId(), configuration.getTeam().getId());
+            String organizationId = configuration.getOrganizationId();
+            String teamId = configuration.getTeamId();
+            organizationTeamValidator.validateOrganizationTeam(configuration.getOrganizationId(), configuration.getTeamId());
 
             QueryCriteria queryCriteria = new QueryCriteria();
-            queryCriteria.setTenantId(configuration.getOrganization().getId());
-            queryCriteria.setTeamId(configuration.getTeam().getId());
+            queryCriteria.setTenantId(organizationId);
+            queryCriteria.setTeamId(teamId);
             Optional<Configuration> existingConfigurationOptional = configurationRepository.findConfigurationById(queryCriteria, configuration.getId());
 
             if (existingConfigurationOptional.isPresent()) {
@@ -131,13 +131,13 @@ public class ConfigurationService {
                 if (configurationDbName.isPresent() && !configurationDbName.get().getId().equals(configuration.getId()))
                     throw new BadRequestException("Configuration already exist with name" + configuration.getName());
 
-                Optional<Organization> organizationDb = organizationRepository.findById(configuration.getOrganization().getId());
+                Optional<Organization> organizationDb = organizationRepository.findById(organizationId);
                 if (organizationDb.isEmpty())
-                    throw new BadRequestException("Organization not exist " + configuration.getOrganization().getName());
+                    throw new BadRequestException("Organization not exist " + organizationId);
 
-                Optional<Team> teamDb = teamRepository.findByIdAndOrganizationId(configuration.getOrganization().getId(), configuration.getTeam().getId());
+                Optional<Team> teamDb = teamRepository.findByIdAndOrganizationId(organizationId, teamId);
                 if (teamDb.isEmpty())
-                    throw new BadRequestException("Team not exist " + configuration.getTeam().getName());
+                    throw new BadRequestException("Team not exist " + teamId);
 
                 Configuration existingConfiguration = existingConfigurationOptional.get();
                 Optional<String> name = Optional.ofNullable(configuration.getName());
@@ -157,8 +157,8 @@ public class ConfigurationService {
                 Optional.ofNullable(configuration.getConfigUrl()).ifPresent(existingConfiguration::setConfigUrl);
                 Optional.ofNullable(configuration.getLanguage()).ifPresent(existingConfiguration::setLanguage);
 
-                organizationDb.ifPresent(existingConfiguration::setOrganization);
-                teamDb.ifPresent(existingConfiguration::setTeam);
+                existingConfiguration.setOrganizationId(organizationId);
+                existingConfiguration.setTeamId(teamId);
 
                 Object config = configuration.getWidgetConfig();
                 if (Objects.nonNull(config)) {
@@ -185,8 +185,8 @@ public class ConfigurationService {
     public Configuration updatePublishedConfiguration(Configuration configuration) {
 
         QueryCriteria queryCriteria = new QueryCriteria();
-        queryCriteria.setTenantId(configuration.getOrganization().getId());
-        queryCriteria.setTeamId(configuration.getTeam().getId());
+        queryCriteria.setTenantId(configuration.getOrganizationId());
+        queryCriteria.setTeamId(configuration.getTeamId());
         Optional<Configuration> existingConfigurationOptional = configurationRepository.findConfigurationById(queryCriteria, configuration.getId());
 
         if (existingConfigurationOptional.isPresent()) {

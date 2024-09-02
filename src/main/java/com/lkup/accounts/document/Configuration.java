@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -23,9 +24,9 @@ public class Configuration {
     private String name;
     private String description;
 
-    private Organization organization;
+    private String organizationId;
 
-    private Team team;
+    private String teamId;
 
     private String widgetColor;
 
@@ -43,8 +44,10 @@ public class Configuration {
 
     private String configUrl;
 
+    @DBRef
     private Environment environment;
 
+    @DBRef
     private AppId appId;
 
     private String hostUrl;

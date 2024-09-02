@@ -1,5 +1,7 @@
 package com.lkup.accounts.dto.appId;
 
+import com.lkup.accounts.document.Organization;
+import com.lkup.accounts.dto.organization.OrganizationDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

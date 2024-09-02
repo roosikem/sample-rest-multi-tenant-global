@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -24,9 +25,9 @@ public class AppId {
     private String appId;
     private String description;
 
-    private Organization organization;
+    private String organizationId;
 
-    private Team team;
+    private String teamId;
 
     @CreatedDate
     private Date createdAt;

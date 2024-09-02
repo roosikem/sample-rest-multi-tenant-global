@@ -29,8 +29,8 @@ public class ConfigurationMapper {
 
     public Configuration convertCreateDtoToConfiguration(CreateConfigurationDto createConfigurationDto) {
         Configuration configuration = modelMapper.map(createConfigurationDto, Configuration.class);
-        configuration.setOrganization(Organization.builder().id(createConfigurationDto.getOrganization()).build());
-        configuration.setTeam(Team.builder().id(createConfigurationDto.getTeam()).build());
+        configuration.setOrganizationId(createConfigurationDto.getOrganization());
+        configuration.setTeamId(createConfigurationDto.getTeam());
         configuration.setAppId(AppId.builder().id(createConfigurationDto.getAppId()).build());
         configuration.setEnvironment(Environment.builder().id(createConfigurationDto.getEnvironment()).build());
         return configuration;
@@ -38,8 +38,8 @@ public class ConfigurationMapper {
 
     public Configuration convertUpdateDtoToConfiguration(UpdateConfigurationDto updateConfigurationDto) {
         Configuration configuration = modelMapper.map(updateConfigurationDto, Configuration.class);
-        configuration.setOrganization(Organization.builder().id(updateConfigurationDto.getOrganization()).build());
-        configuration.setTeam(Team.builder().id(updateConfigurationDto.getTeam()).build());
+        configuration.setOrganizationId(updateConfigurationDto.getOrganization());
+        configuration.setTeamId(updateConfigurationDto.getTeam());
         configuration.setAppId(AppId.builder().id(updateConfigurationDto.getAppId()).build());
         configuration.setEnvironment(Environment.builder().id(updateConfigurationDto.getEnvironment()).build());
         return configuration;

@@ -149,8 +149,8 @@ public class DeploymentService {
     private String createPublishUrl(Configuration configuration) {
         StringBuilder uriBuilder = new StringBuilder();
 
-        Optional.ofNullable(configuration.getOrganization().getName()).ifPresent(uriBuilder::append);
-        uriBuilder.append("_");
+        //Optional.ofNullable(configuration.getOrganization().getName()).ifPresent(uriBuilder::append);
+        //uriBuilder.append("_");
         Optional.ofNullable(configuration.getEnvironment()).ifPresent(uriBuilder::append);
         uriBuilder.append("_");
         Optional.ofNullable(configuration.getAppId()).ifPresent(uriBuilder::append);

@@ -1,15 +1,19 @@
 package com.lkup.accounts.mapper;
 
 import com.lkup.accounts.document.Environment;
+import com.lkup.accounts.document.Organization;
 import com.lkup.accounts.document.Team;
 import com.lkup.accounts.dto.environment.CreateEnvironmentDto;
 import com.lkup.accounts.dto.environment.EnvironmentDto;
 import com.lkup.accounts.dto.environment.UpdateEnvironmentDto;
+import com.lkup.accounts.service.OrganizationService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class EnvironmentMapper {
@@ -18,6 +22,9 @@ public class EnvironmentMapper {
     private final APIKeyMapper apiKeyMapper;
     private final APPIdMapper appIdMapper;
     private final OrganizationMapper organizationMapper;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     public EnvironmentMapper(ModelMapper modelMapper, APIKeyMapper apiKeyMapper, APPIdMapper appIdMapper, OrganizationMapper organizationMapper) {
         this.apiKeyMapper = apiKeyMapper;
@@ -40,8 +47,10 @@ public class EnvironmentMapper {
         }
         environmentDto.setApiKeys(apiKeyMapper.convertAPIKeysToDtos(environment.getApiKeys()));
         environmentDto.setAppIds(appIdMapper.convertAPPIdsToDtos(environment.getAppIds()));
-        if (null != environment.getOrganization()) {
-            environmentDto.setOrganizationDto(organizationMapper.convertOrganizationToDto(environment.getOrganization()));
+        if (null != environment.getOrganizationId()) {
+            Optional<Organization> organizationDb = organizationService.findOrganizationById(environment.getOrganizationId());
+            if(organizationDb.isPresent())
+                environmentDto.setOrganizationDto(organizationMapper.convertOrganizationToDto(organizationDb.get()));
         }
         return environmentDto;
     }
@@ -58,12 +67,10 @@ public class EnvironmentMapper {
             environment.setAppIds(appIdMapper.convertIdsToAppId(createEnvironmentDto.getAppIds()));
         }
         if (null != createEnvironmentDto.getOrganizationId()) {
-            environment.setOrganization(organizationMapper.convertOrgIdToOrganization(createEnvironmentDto.getOrganizationId()));
+            environment.setOrganizationId(createEnvironmentDto.getOrganizationId());
         }
         if (null != createEnvironmentDto.getTeamId()) {
-            Team team = new Team();
-            team.setId(createEnvironmentDto.getTeamId());
-            environment.setTeam(team);
+            environment.setTeamId(createEnvironmentDto.getTeamId());
         }
         return environment;
     }
@@ -100,7 +107,7 @@ public class EnvironmentMapper {
             environment.setAppIds(appIdMapper.convertIdsToAppId(updateEnvironmentDto.getAppIds()));
         }
         if (null != updateEnvironmentDto.getOrganizationId()) {
-            environment.setOrganization(organizationMapper.convertOrgIdToOrganization(updateEnvironmentDto.getOrganizationId()));
+            environment.setOrganizationId(updateEnvironmentDto.getOrganizationId());
         }
         return environment;
     }

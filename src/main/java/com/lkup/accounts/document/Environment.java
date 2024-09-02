@@ -36,8 +36,8 @@ public class Environment {
     private String authTokenUrl;
     private String defaultConfigTemplate;
 
-    private Organization organization;
-    private Team team;
+    private String organizationId;
+    private String teamId;
 
     private String environmentType;
 

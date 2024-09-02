@@ -26,9 +26,9 @@ public class Deployment {
     @DBRef
     private User assigneduser;
 
-    private Organization organization;
+    private String organizationId;
 
-    private Team team;
+    private String teamId;
 
     @DBRef
     private Configuration configuration;

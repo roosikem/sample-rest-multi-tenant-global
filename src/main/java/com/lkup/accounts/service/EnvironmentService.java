@@ -49,27 +49,26 @@ public class EnvironmentService {
 
     public Environment createEnvironment(Environment environment) {
         Objects.requireNonNull(environment);
-        Objects.requireNonNull(environment.getOrganization());
-        Objects.requireNonNull(environment.getOrganization().getId());
-        Objects.requireNonNull(environment.getTeam().getId());
+        Objects.requireNonNull(environment.getOrganizationId());
+        Objects.requireNonNull(environment.getTeamId());
         environment.setId(defaultUUIDGenerator.generateId());
         try {
-            String requestTenantId = environment.getOrganization().getId();
-            String requestTeamId = environment.getTeam().getId();
+            String requestTenantId = environment.getOrganizationId();
+            String requestTeamId = environment.getTeamId();
             organizationTeamValidator.validateOrganizationTeam(requestTenantId, requestTeamId);
             QueryCriteria queryCriteria = new QueryCriteria();
             queryCriteria.setTenantId(requestTenantId);
             queryCriteria.setTeamId(requestTeamId);
 
-            Organization organization = organizationRepository.findById(environment.getOrganization().getId())
-                    .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + environment.getOrganization().getId() + " not found"));
-            environment.setOrganization(organization);
+            Organization organization = organizationRepository.findById(environment.getOrganizationId())
+                    .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + environment.getOrganizationId() + " not found"));
+            environment.setOrganizationId(organization.getId());
             Team team = teamRepository.findByIdAndOrganizationId(requestTeamId, requestTenantId).orElseThrow(() -> new TeamNotFoundException("Team not found with id " + RequestContext.getRequestContext().getTeamId()));
             Optional<Environment> existingEnv = environmentRepository.findByName(queryCriteria, environment.getName());
             if (existingEnv.isPresent()) {
                 throw new BadRequestException("Environment already exists with name " + environment.getName());
             }
-            environment.setTeam(team);
+            environment.setTeamId(team.getId());
             if (environment.getAppIds() != null) {
                 List<String> appIds = environment.getAppIds().stream().map(AppId::getId).filter(id -> !id.isEmpty()).toList();
                 Optional<List<AppId>> dbAppIds = appIdRepository.findByIds(queryCriteria, appIds);
@@ -109,11 +108,11 @@ public class EnvironmentService {
     public Optional<Environment> updateEnvironment(Environment environment) {
         Assert.notNull(environment.getId(), "Environment ID cannot be null for update");
         Objects.requireNonNull(environment);
-        Objects.requireNonNull(environment.getOrganization());
-        Objects.requireNonNull(environment.getOrganization().getId());
-        Objects.requireNonNull(environment.getTeam().getId());
-        String requestTenantId = environment.getOrganization().getId();
-        String requestTeamId = environment.getTeam().getId();
+        Objects.requireNonNull(environment.getOrganizationId());
+        Objects.requireNonNull(environment.getOrganizationId());
+        Objects.requireNonNull(environment.getTeamId());
+        String requestTenantId = environment.getOrganizationId();
+        String requestTeamId = environment.getTeamId();
         organizationTeamValidator.validateOrganizationTeam(requestTenantId, requestTeamId);
 
         QueryCriteria queryCriteria = new QueryCriteria();
@@ -132,10 +131,10 @@ public class EnvironmentService {
                 existingEnvironment.setApiKeys(environment.getApiKeys());
             }
 
-            if (environment.getOrganization() != null) {
-                Organization organization = organizationRepository.findById(environment.getOrganization().getId())
-                        .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + environment.getOrganization().getId() + " not found"));
-                existingEnvironment.setOrganization(organization);
+            if (environment.getOrganizationId() != null) {
+                Organization organization = organizationRepository.findById(environment.getOrganizationId())
+                        .orElseThrow(() -> new OrganizationNotFoundException("Organization with id " + environment.getOrganizationId() + " not found"));
+                existingEnvironment.setOrganizationId(organization.getId());
             }
 
             if (environment.getAppIds() != null) {
