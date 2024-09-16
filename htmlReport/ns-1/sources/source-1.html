@@ -1,0 +1,369 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GtpAccountsApplication</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts</a>
+</div>
+
+<h1>Coverage Summary for Class: GtpAccountsApplication (com.lkup.accounts)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GtpAccountsApplication</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.9%
+  </span>
+  <span class="absValue">
+    (3/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (3/21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GtpAccountsApplication$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">GtpAccountsApplication$$SpringCGLIB$$FastClass$$0</td>
+  </tr>
+  <tr>
+    <td class="name">GtpAccountsApplication$$SpringCGLIB$$FastClass$$1</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    42.9%
+  </span>
+  <span class="absValue">
+    (3/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (3/21)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts;
+&nbsp;
+&nbsp;import com.lkup.accounts.context.RequestContext;
+&nbsp;import com.lkup.accounts.context.RequestInfo;
+&nbsp;import com.lkup.accounts.document.Country;
+&nbsp;import com.lkup.accounts.document.Organization;
+&nbsp;import com.lkup.accounts.document.Role;
+&nbsp;import com.lkup.accounts.document.User;
+&nbsp;import com.lkup.accounts.dto.appId.AppIdDto;
+&nbsp;import com.lkup.accounts.dto.environment.CreateEnvironmentDto;
+&nbsp;import com.lkup.accounts.dto.organization.OrganizationDto;
+&nbsp;import com.lkup.accounts.dto.team.TeamDto;
+&nbsp;import com.lkup.accounts.mapper.APPIdMapper;
+&nbsp;import com.lkup.accounts.mapper.EnvironmentMapper;
+&nbsp;import com.lkup.accounts.mapper.OrganizationMapper;
+&nbsp;import com.lkup.accounts.mapper.TeamMapper;
+&nbsp;import com.lkup.accounts.repository.global.CountryRepository;
+&nbsp;import com.lkup.accounts.repository.global.RoleRepository;
+&nbsp;import com.lkup.accounts.repository.global.UserRepository;
+&nbsp;import com.lkup.accounts.repository.tenant.EnvironmentRepository;
+&nbsp;import com.lkup.accounts.service.*;
+&nbsp;import com.lkup.accounts.utilities.ApplicationConstants;
+&nbsp;import com.lkup.accounts.utilities.RoleConstants;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.boot.CommandLineRunner;
+&nbsp;import org.springframework.boot.SpringApplication;
+&nbsp;import org.springframework.boot.autoconfigure.SpringBootApplication;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.data.mongodb.config.EnableMongoAuditing;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.UUID;
+&nbsp;
+&nbsp;import static com.lkup.accounts.utilities.ApplicationConstants.*;
+&nbsp;import static com.lkup.accounts.utilities.PermissionConstants.*;
+&nbsp;
+&nbsp;@SpringBootApplication
+&nbsp;@EnableMongoAuditing
+<b class="fc">&nbsp;public class GtpAccountsApplication {</b>
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        SpringApplication.run(GtpAccountsApplication.class, args);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    static final String defaultConfig = &quot;{\n  \&quot;users\&quot;: [\n    {\n      \&quot;id\&quot;: 1,\n      \&quot;firstName\&quot;: \&quot;Emily\&quot;,\n      \&quot;lastName\&quot;: \&quot;Johnson\&quot;,\n      \&quot;maidenName\&quot;: \&quot;Smith\&quot;,\n      \&quot;age\&quot;: 28,\n      \&quot;gender\&quot;: \&quot;female\&quot;,\n      \&quot;email\&quot;: \&quot;emily.johnson@x.dummyjson.com\&quot;,\n      \&quot;phone\&quot;: \&quot;+81 965-431-3024\&quot;,\n      \&quot;username\&quot;: \&quot;emilys\&quot;,\n      \&quot;password\&quot;: \&quot;emilyspass\&quot;,\n      \&quot;birthDate\&quot;: \&quot;1996-5-30\&quot;,\n      \&quot;image\&quot;: \&quot;...\&quot;,\n      \&quot;bloodGroup\&quot;: \&quot;O-\&quot;,\n      \&quot;height\&quot;: 193.24,\n      \&quot;weight\&quot;: 63.16,\n      \&quot;eyeColor\&quot;: \&quot;Green\&quot;,\n      \&quot;hair\&quot;: {\n        \&quot;color\&quot;: \&quot;Brown\&quot;,\n        \&quot;type\&quot;: \&quot;Curly\&quot;\n      },\n      \&quot;ip\&quot;: \&quot;42.48.100.32\&quot;,\n      \&quot;address\&quot;: {\n        \&quot;address\&quot;: \&quot;626 Main Street\&quot;,\n        \&quot;city\&quot;: \&quot;Phoenix\&quot;,\n        \&quot;state\&quot;: \&quot;Mississippi\&quot;,\n        \&quot;stateCode\&quot;: \&quot;MS\&quot;,\n        \&quot;postalCode\&quot;: \&quot;29112\&quot;,\n        \&quot;coordinates\&quot;: {\n          \&quot;lat\&quot;: -77.16213,\n          \&quot;lng\&quot;: -92.084824\n        },\n        \&quot;country\&quot;: \&quot;United States\&quot;\n      },\n      \&quot;macAddress\&quot;: \&quot;47:fa:41:18:ec:eb\&quot;,\n      \&quot;university\&quot;: \&quot;University of Wisconsin--Madison\&quot;,\n      \&quot;bank\&quot;: {\n        \&quot;cardExpire\&quot;: \&quot;03/26\&quot;,\n        \&quot;cardNumber\&quot;: \&quot;9289760655481815\&quot;,\n        \&quot;cardType\&quot;: \&quot;Elo\&quot;,\n        \&quot;currency\&quot;: \&quot;CNY\&quot;,\n        \&quot;iban\&quot;: \&quot;YPUXISOBI7TTHPK2BR3HAIXL\&quot;\n      },\n      \&quot;company\&quot;: {\n        \&quot;department\&quot;: \&quot;Engineering\&quot;,\n        \&quot;name\&quot;: \&quot;Dooley, Kozey and Cronin\&quot;,\n        \&quot;title\&quot;: \&quot;Sales Manager\&quot;,\n        \&quot;address\&quot;: {\n          \&quot;address\&quot;: \&quot;263 Tenth Street\&quot;,\n          \&quot;city\&quot;: \&quot;San Francisco\&quot;,\n          \&quot;state\&quot;: \&quot;Wisconsin\&quot;,\n          \&quot;stateCode\&quot;: \&quot;WI\&quot;,\n          \&quot;postalCode\&quot;: \&quot;37657\&quot;,\n          \&quot;coordinates\&quot;: {\n            \&quot;lat\&quot;: 71.814525,\n            \&quot;lng\&quot;: -161.150263\n          },\n          \&quot;country\&quot;: \&quot;United States\&quot;\n        }\n      },\n      \&quot;ein\&quot;: \&quot;977-175\&quot;,\n      \&quot;ssn\&quot;: \&quot;900-590-289\&quot;,\n      \&quot;userAgent\&quot;: \&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36\&quot;,\n      \&quot;crypto\&quot;: {\n        \&quot;coin\&quot;: \&quot;Bitcoin\&quot;,\n        \&quot;wallet\&quot;: \&quot;0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a\&quot;,\n        \&quot;network\&quot;: \&quot;Ethereum (ERC20)\&quot;\n      },\n      \&quot;role\&quot;: \&quot;admin\&quot; // or \&quot;moderator\&quot;, or \&quot;user\&quot;\n    },\n    {...},\n    {...}\n    // 30 items\n  ],\n  \&quot;total\&quot;: 208,\n  \&quot;skip\&quot;: 0,\n  \&quot;limit\&quot;: 30\n}&quot;;
+&nbsp;
+&nbsp;    @Value(&quot;${root.username}&quot;)
+&nbsp;    private String username;
+&nbsp;
+&nbsp;    @Value(&quot;${root.password}&quot;)
+&nbsp;    private String password;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private APPIdMapper appIdMapper;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private EnvironmentMapper environmentMapper;
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public CommandLineRunner commandLineRunner(UserRepository userRepository, CountryRepository countryRepository,
+&nbsp;                                               RoleRepository roleRepository, EnvironmentRepository environmentRepository,
+&nbsp;                                               EnvironmentService environmentService, EnvironmentMapper environmentMapper,
+&nbsp;                                               DefaultUUIDGeneratorService defaultUUIDGeneratorService,
+&nbsp;                                               PasswordEncoder passwordEncoder,
+&nbsp;                                               APPIdService appIdService, APPIdMapper appIdMapper,
+&nbsp;                                               OrganizationService organizationService, OrganizationMapper organizationMapper,
+&nbsp;                                               TeamService teamService, TeamMapper teamMapper) {
+<b class="fc">&nbsp;        return args -&gt; {</b>
+&nbsp;
+&nbsp;
+&nbsp;            if (false) {
+&nbsp;                Country ie = new Country(defaultUUIDGeneratorService.generateId(), &quot;Ireland&quot;, &quot;IE&quot;);
+&nbsp;                countryRepository.deleteAll();
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Ethiopia&quot;, &quot;ET&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;United Kingdom&quot;, &quot;UK&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Germany&quot;, &quot;DE&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Romanian&quot;, &quot;RO&quot;));
+&nbsp;                countryRepository.save(ie);
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;South Africa&quot;, &quot;ZA&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Turkey&quot;, &quot;TR&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Albania&quot;, &quot;AL&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Kenya&quot;, &quot;KE&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Tanzania&quot;, &quot;TZ&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Czech Republic&quot;, &quot;CZ&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Greece&quot;, &quot;GR&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Egypt&quot;, &quot;EG&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Portugal&quot;, &quot;PT&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Spain&quot;, &quot;ES&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Mozambique&quot;, &quot;MZ&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Democratic Republic of the Congo&quot;, &quot;DCR&quot;));
+&nbsp;                countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), &quot;Lesoto&quot;, &quot;LS&quot;));
+&nbsp;
+&nbsp;                roleRepository.deleteAll();
+&nbsp;                Role role = new Role();
+&nbsp;                role.setId(defaultUUIDGeneratorService.generateId());
+&nbsp;                role.setName(RoleConstants.SUPER_ADMIN_ROLE);
+&nbsp;                role.setPermissions(Set.of(ADMINISTRATOR));
+&nbsp;                roleRepository.save(role);
+&nbsp;
+&nbsp;                Role role2 = new Role();
+&nbsp;                role2.setId(defaultUUIDGeneratorService.generateId());
+&nbsp;                role2.setName(RoleConstants.USER_ROLE);
+&nbsp;                role2.setPermissions(Set.of(ADMINISTRATOR));
+&nbsp;                roleRepository.save(role2);
+&nbsp;
+&nbsp;                Role role3 = new Role();
+&nbsp;                role3.setId(defaultUUIDGeneratorService.generateId());
+&nbsp;                role3.setName(RoleConstants.USER_ROLE);
+&nbsp;                role3.setPermissions(Set.of(CREATE_CONFIGURATION, VIEW_CONFIGURATION, UPDATE_CONFIGURATION));
+&nbsp;                roleRepository.save(role3);
+&nbsp;
+&nbsp;                organizationService.deleteAll();
+&nbsp;                OrganizationDto organizationDto = createOrganizationDto(&quot;VF-1&quot;);
+&nbsp;                Organization organizationDb1 =
+&nbsp;                        organizationService.createOrganization(organizationMapper.convertDtoToOrganization(organizationDto));
+&nbsp;
+&nbsp;                OrganizationDto organizationDto2 = createOrganizationDto(&quot;VF-2&quot;);
+&nbsp;                Organization organizationDb2 =
+&nbsp;                        organizationService.createOrganization(organizationMapper.convertDtoToOrganization(organizationDto2));
+&nbsp;
+&nbsp;
+&nbsp;                RequestInfo requestInfo = new RequestInfo(UUID.randomUUID().toString().replace(&quot;-&quot;, &quot;&quot;), null, organizationDb1.getId());
+&nbsp;                RequestContext.setRequestContext(requestInfo);
+&nbsp;
+&nbsp;                teamService.deleteAll();
+&nbsp;                organizationDto = organizationMapper.convertOrganizationToDto(organizationDb1);
+&nbsp;                TeamDto teamDto = new TeamDto();
+&nbsp;                teamDto.setName(&quot;T-UI&quot;);
+&nbsp;                teamDto.setOrganization(organizationDto);
+&nbsp;                teamDto = teamMapper.convertTeamToDto(teamService.createTeam(teamMapper.convertDtoToTeam(teamDto), organizationDto.getId()));
+&nbsp;                RequestContext.clearRequestContext();
+&nbsp;
+&nbsp;
+&nbsp;                requestInfo = new RequestInfo(UUID.randomUUID().toString().replace(&quot;-&quot;, &quot;&quot;), null, organizationDb1.getId());
+&nbsp;                RequestContext.setRequestContext(requestInfo);
+&nbsp;
+&nbsp;                organizationDto2 = organizationMapper.convertOrganizationToDto(organizationDb2);
+&nbsp;                TeamDto teamDto2 = new TeamDto();
+&nbsp;                teamDto2.setName(&quot;S-UI&quot;);
+&nbsp;                teamDto2.setOrganization(organizationDto2);
+&nbsp;                teamDto2 = teamMapper.convertTeamToDto(teamService.createTeam(teamMapper.convertDtoToTeam(teamDto2), organizationDto2.getId()));
+&nbsp;                RequestContext.clearRequestContext();
+&nbsp;
+&nbsp;
+&nbsp;                userRepository.deleteAll();
+&nbsp;                User root = new User();
+&nbsp;                root.setId(defaultUUIDGeneratorService.generateId());
+&nbsp;                root.setCountryAccess(List.of(ie));
+&nbsp;                root.setUsername(username);
+&nbsp;                root.setPassword(passwordEncoder.encode(password));
+&nbsp;                root.setOrganization(organizationDb1);
+&nbsp;                root.setTeams(List.of(teamMapper.convertDtoToTeam(teamDto)));
+&nbsp;                root.setRole(role);
+&nbsp;
+&nbsp;                userRepository.save(root);
+&nbsp;
+&nbsp;                root = new User();
+&nbsp;                root.setId(defaultUUIDGeneratorService.generateId());
+&nbsp;                root.setCountryAccess(List.of(ie));
+&nbsp;                root.setUsername(&quot;manish2&quot;);
+&nbsp;                root.setPassword(passwordEncoder.encode(password));
+&nbsp;                root.setOrganization(organizationDb2);
+&nbsp;                root.setTeams(List.of(teamMapper.convertDtoToTeam(teamDto2)));
+&nbsp;                root.setRole(role2);
+&nbsp;                userRepository.save(root);
+&nbsp;
+&nbsp;                root = new User();
+&nbsp;                root.setId(defaultUUIDGeneratorService.generateId());
+&nbsp;                root.setCountryAccess(List.of(ie));
+&nbsp;                root.setUsername(&quot;manish3&quot;);
+&nbsp;                root.setPassword(passwordEncoder.encode(password));
+&nbsp;                root.setOrganization(organizationDb1);
+&nbsp;                root.setTeams(List.of(teamMapper.convertDtoToTeam(teamDto)));
+&nbsp;                root.setRole(role3);
+&nbsp;                userRepository.save(root);
+&nbsp;
+&nbsp;                requestInfo = new RequestInfo(UUID.randomUUID().toString().replace(&quot;-&quot;, &quot;&quot;), teamDto.getId(), organizationDto.getId());
+&nbsp;                RequestContext.setRequestContext(requestInfo);
+&nbsp;
+&nbsp;                environmentRepository.deleteAll();
+&nbsp;                appIdService.deleteAll();
+&nbsp;
+&nbsp;                AppIdDto groupDevAppDto1 = new AppIdDto(ApplicationConstants.DEV_KEY_1, ApplicationConstants.DEV_KEY_1, &quot;Group Dev App Id&quot;, organizationDb1.getId(), teamDto.getId());
+&nbsp;
+&nbsp;                AppIdDto groupDevAppDto2 = new AppIdDto(DEV_KEY_2, DEV_KEY_2, &quot;Group Dev App Id 2&quot;, organizationDb1.getId(), teamDto.getId());
+&nbsp;
+&nbsp;                AppIdDto groupQaAppDto1 = new AppIdDto(QA_KEY_1, QA_KEY_1, &quot;Group QA App Id&quot;, organizationDb1.getId(), teamDto.getId());
+&nbsp;                AppIdDto groupQaAppDto2 = new AppIdDto(QA_KEY_2, QA_KEY_2, &quot;Group QA App Id 2&quot;, organizationDb1.getId(), teamDto.getId());
+&nbsp;
+&nbsp;                AppIdDto groupDevAppId1 = appIdMapper.convertAPPIdToDto(appIdService.createAPPId(appIdMapper.convertAPPIdDtoToAppId(groupDevAppDto1)));
+&nbsp;                AppIdDto groupDevAppId2 = appIdMapper.convertAPPIdToDto(appIdService.createAPPId(appIdMapper.convertAPPIdDtoToAppId(groupDevAppDto2)));
+&nbsp;
+&nbsp;                AppIdDto groupQaAppId1 = appIdMapper.convertAPPIdToDto(appIdService.createAPPId(appIdMapper.convertAPPIdDtoToAppId(groupQaAppDto1)));
+&nbsp;
+&nbsp;                AppIdDto groupQaAppId2 = appIdMapper.convertAPPIdToDto(appIdService.createAPPId(appIdMapper.convertAPPIdDtoToAppId(groupQaAppDto2)));
+&nbsp;
+&nbsp;                List&lt;AppIdDto&gt; appIdsGroupDev = List.of(groupDevAppId1, groupDevAppId2);
+&nbsp;                List&lt;AppIdDto&gt; appIdsGroupQa = List.of(groupQaAppId1, groupQaAppId2);
+&nbsp;
+&nbsp;
+&nbsp;//                CreateEnvironmentDto environmentDto = createEnvDto(organizationDto, teamDto, &quot;DEV&quot;, DEV_URL,
+&nbsp;//                        DEV_URL, appIdsGroupDev, defaultConfig, &quot;DEV&quot;);
+&nbsp;//
+&nbsp;//                environmentMapper.convertEnvironmentToCreateDto(
+&nbsp;//                        environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto)));
+&nbsp;//
+&nbsp;//                CreateEnvironmentDto environmentDto2 = createEnvDto(organizationDto, teamDto, &quot;QA&quot;, QA_URL,
+&nbsp;//                        QA_URL, appIdsGroupQa, defaultConfig, &quot;QA&quot;);
+&nbsp;//
+&nbsp;//                environmentMapper.convertEnvironmentToCreateDto(
+&nbsp;//                        environmentService.createEnvironment(environmentMapper.convertCreateDtoToEnvironment(environmentDto2)));
+&nbsp;                System.out.println(teamDto.getId());
+&nbsp;                System.out.println(organizationDto.getId());
+&nbsp;                RequestContext.clearRequestContext();
+&nbsp;            }
+<b class="fc">&nbsp;        };</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private static OrganizationDto createOrganizationDto(String orgName) {
+<b class="nc">&nbsp;        OrganizationDto organizationDto = new OrganizationDto();</b>
+<b class="nc">&nbsp;        organizationDto.setName(orgName);</b>
+<b class="nc">&nbsp;        return organizationDto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static CreateEnvironmentDto createEnvDto(OrganizationDto organizationDto, TeamDto teamDto, String environmentName, String gatewayURL, String tokenURL, List&lt;AppIdDto&gt; appIds, String defaultConfig, String envType) {
+&nbsp;
+<b class="nc">&nbsp;        CreateEnvironmentDto environment = createEnvironment(environmentName, gatewayURL, tokenURL);</b>
+<b class="nc">&nbsp;        environment.setId(UUID.randomUUID().toString());</b>
+<b class="nc">&nbsp;        environment.setDefaultConfigTemplate(defaultConfig);</b>
+<b class="nc">&nbsp;        environment.setAppIds(appIds.stream().map(AppIdDto::getId).toList());</b>
+<b class="nc">&nbsp;        environment.setOrganizationId(organizationDto.getId());</b>
+<b class="nc">&nbsp;        environment.setTeamId(teamDto.getId());</b>
+<b class="nc">&nbsp;        environment.setEnvironmentType(envType);</b>
+<b class="nc">&nbsp;        return environment;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static CreateEnvironmentDto createEnvironment(String name, String hostUrl, String authTokenUrl) {
+<b class="nc">&nbsp;        CreateEnvironmentDto environment = new CreateEnvironmentDto();</b>
+<b class="nc">&nbsp;        environment.setId(UUID.randomUUID().toString());</b>
+<b class="nc">&nbsp;        environment.setName(name);</b>
+<b class="nc">&nbsp;        environment.setHostUrl(hostUrl);</b>
+<b class="nc">&nbsp;        environment.setAuthTokenUrl(authTokenUrl);</b>
+<b class="nc">&nbsp;        return environment;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

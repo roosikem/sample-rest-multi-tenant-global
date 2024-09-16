@@ -1,0 +1,255 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > APPIdCustomRepositoryImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.repository.custom.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: APPIdCustomRepositoryImpl (com.lkup.accounts.repository.custom.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">APPIdCustomRepositoryImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.7%
+  </span>
+  <span class="absValue">
+    (1/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.4%
+  </span>
+  <span class="absValue">
+    (1/42)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">APPIdCustomRepositoryImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    7.7%
+  </span>
+  <span class="absValue">
+    (1/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.4%
+  </span>
+  <span class="absValue">
+    (1/42)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.repository.custom.impl;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.AppId;
+&nbsp;import com.lkup.accounts.repository.custom.APPIdCustomRepository;
+&nbsp;import com.lkup.accounts.repository.custom.QueryCriteria;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Qualifier;
+&nbsp;import org.springframework.data.mongodb.core.MongoTemplate;
+&nbsp;import org.springframework.data.mongodb.core.query.Criteria;
+&nbsp;import org.springframework.data.mongodb.core.query.Query;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Repository
+<b class="fc">&nbsp;public class APPIdCustomRepositoryImpl implements APPIdCustomRepository {</b>
+&nbsp;
+&nbsp;    @Qualifier(&quot;tenantMongoTemplate&quot;)
+&nbsp;    @Autowired
+&nbsp;    MongoTemplate mongoTemplate;
+&nbsp;
+&nbsp;    @Qualifier(&quot;globalMongoTemplate&quot;)
+&nbsp;    @Autowired
+&nbsp;    MongoTemplate globalMongoTemplate;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;AppId&gt; validateExisting(QueryCriteria queryCriteria, String name, String appId) {
+<b class="nc">&nbsp;        Query query = new Query();</b>
+<b class="nc">&nbsp;        Criteria orCriteria = new Criteria().orOperator(Criteria.where(&quot;appId&quot;).is(appId));</b>
+<b class="nc">&nbsp;        query.addCriteria(orCriteria);</b>
+<b class="nc">&nbsp;        List&lt;AppId&gt; appIds = globalMongoTemplate.find(query, AppId.class);</b>
+<b class="nc">&nbsp;        if (!appIds.isEmpty())</b>
+<b class="nc">&nbsp;            return Optional.ofNullable(appIds.get(0));</b>
+<b class="nc">&nbsp;        return Optional.empty();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;AppId&gt; findByName(QueryCriteria queryCriteria, String name) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;name&quot;).is(name)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        AppId appIds = globalMongoTemplate.findOne(query, AppId.class);</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(appIds);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public &lt;S extends AppId&gt; S save(S entity) {
+<b class="nc">&nbsp;        return globalMongoTemplate.save(entity);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteById(QueryCriteria queryCriteria, String id) {
+&nbsp;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;AppId&gt; findById(String id) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;id&quot;).is(id)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        AppId appId = globalMongoTemplate.findOne(query, AppId.class);</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(appId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public long countAll(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        Query query = new Query();</b>
+<b class="nc">&nbsp;        return globalMongoTemplate.count(query, AppId.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public long count(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        return countAll(queryCriteria);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;AppId&gt; findAllAppIds(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        Query query = new Query();</b>
+<b class="nc">&nbsp;        return globalMongoTemplate.find(query, AppId.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;List&lt;AppId&gt;&gt; findByIds(QueryCriteria queryCriteria, List&lt;String&gt; ids) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;id&quot;).in(ids)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        return Optional.of(globalMongoTemplate.find(query, AppId.class));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteAll(QueryCriteria queryCriteria) {
+&nbsp;
+<b class="nc">&nbsp;        Query query = new Query();</b>
+<b class="nc">&nbsp;        globalMongoTemplate.findAllAndRemove(query, AppId.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;AppId&gt; findByTenantAndTeamId(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId())</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        return globalMongoTemplate.find(query, AppId.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;AppId&gt; findByIdAndOrgTeam(QueryCriteria queryCriteria, String id) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;id&quot;).is(id)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(globalMongoTemplate.findOne(query, AppId.class));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

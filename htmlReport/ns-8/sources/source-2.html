@@ -1,0 +1,178 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > APPIdController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: APPIdController (com.lkup.accounts.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">APPIdController</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.8%
+  </span>
+  <span class="absValue">
+    (3/19)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">APPIdController$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.8%
+  </span>
+  <span class="absValue">
+    (3/19)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.controller;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.AppId;
+&nbsp;import com.lkup.accounts.dto.appId.AppIdDto;
+&nbsp;import com.lkup.accounts.dto.appId.CreateUpdateAppIdDto;
+&nbsp;import com.lkup.accounts.mapper.APPIdMapper;
+&nbsp;import com.lkup.accounts.service.APPIdService;
+&nbsp;import com.lkup.accounts.utilities.PermissionConstants;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.net.URI;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/v1/appIds&quot;)
+&nbsp;public class APPIdController {
+&nbsp;
+&nbsp;    private final APPIdService appIdService;
+&nbsp;    private final APPIdMapper appIdMapper;
+&nbsp;
+<b class="fc">&nbsp;    public APPIdController(APPIdService appIdService, APPIdMapper appIdMapper) {</b>
+<b class="fc">&nbsp;        this.appIdService = appIdService;</b>
+<b class="fc">&nbsp;        this.appIdMapper = appIdMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_API_KEY + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;AppIdDto&gt; getAPIKeyById(@PathVariable String id) {
+<b class="nc">&nbsp;        Optional&lt;AppId&gt; appId = appIdService.findAppIdById(id);</b>
+<b class="nc">&nbsp;        return appId.map(appIdMapper::convertAPPIdToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;CreateUpdateAppIdDto&gt; createAppId(@RequestBody CreateUpdateAppIdDto createAppIdDto) {
+<b class="nc">&nbsp;        AppId appId = appIdMapper.convertCreateDtoToAPPIdEntity(createAppIdDto);</b>
+<b class="nc">&nbsp;        appId = appIdService.createAPPId(appId);</b>
+<b class="nc">&nbsp;        CreateUpdateAppIdDto createUpdateAppIdDto = appIdMapper.convertAppIdToCreateUpdateDto(appId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.created(URI.create(&quot;/api/v1/appIds/&quot; + createUpdateAppIdDto.getId())).body(createUpdateAppIdDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.UPDATE_API_KEY + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;AppIdDto&gt; updateAppId(@PathVariable String id, @RequestBody CreateUpdateAppIdDto createUpdateAppIdDto) {
+<b class="nc">&nbsp;        createUpdateAppIdDto.setId(id);</b>
+<b class="nc">&nbsp;        AppId appId = appIdMapper.convertCreateDtoToAPPIdEntity(createUpdateAppIdDto);</b>
+<b class="nc">&nbsp;        Optional&lt;AppId&gt; updatedAPIKey = appIdService.updateAppId(appId);</b>
+<b class="nc">&nbsp;        return updatedAPIKey.map(appIdMapper::convertAPPIdToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_API_KEY + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Iterable&lt;AppIdDto&gt;&gt; getAllAppId() {
+<b class="nc">&nbsp;        List&lt;AppId&gt; apiKeys = appIdService.findAllAppIdsKeys();</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(appIdMapper.convertAPPIdsToDtos(apiKeys));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

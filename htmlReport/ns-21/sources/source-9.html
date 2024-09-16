@@ -1,0 +1,306 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TeamMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: TeamMapper (com.lkup.accounts.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TeamMapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23.8%
+  </span>
+  <span class="absValue">
+    (19/80)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.7%
+  </span>
+  <span class="absValue">
+    (41/96)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.mapper;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Organization;
+&nbsp;import com.lkup.accounts.document.Team;
+&nbsp;import com.lkup.accounts.document.User;
+&nbsp;import com.lkup.accounts.dto.organization.OrganizationDto;
+&nbsp;import com.lkup.accounts.dto.team.CreateTeamDto;
+&nbsp;import com.lkup.accounts.dto.team.TeamDto;
+&nbsp;import com.lkup.accounts.dto.team.UpdateTeamDto;
+&nbsp;import com.lkup.accounts.repository.global.OrganizationRepository;
+&nbsp;import com.lkup.accounts.repository.global.UserRepository;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Component
+&nbsp;public class TeamMapper {
+&nbsp;
+&nbsp;    private final UserRepository userRepository;
+&nbsp;    private final OrganizationRepository organizationRepository;
+&nbsp;    private final UserMapper userMapper;
+&nbsp;
+<b class="fc">&nbsp;    public TeamMapper(UserRepository userRepository, OrganizationRepository organizationRepository, UserMapper userMapper) {</b>
+<b class="fc">&nbsp;        this.userRepository = userRepository;</b>
+<b class="fc">&nbsp;        this.organizationRepository = organizationRepository;</b>
+<b class="fc">&nbsp;        this.userMapper = userMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Team convertCreateTeamDtoToTeam(CreateTeamDto createTeamDto) {
+<b class="pc">&nbsp;        if (createTeamDto == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Team team = new Team();</b>
+<b class="pc">&nbsp;        if (createTeamDto.getName() != null) {</b>
+<b class="fc">&nbsp;            team.setName(createTeamDto.getName());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (createTeamDto.getBusinessDetails() != null) {</b>
+<b class="nc">&nbsp;            team.setBusinessDetails(createTeamDto.getBusinessDetails());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (createTeamDto.getBusinessService() != null) {</b>
+<b class="nc">&nbsp;            team.setBusinessService(createTeamDto.getBusinessService());</b>
+&nbsp;        }
+&nbsp;
+<b class="pc">&nbsp;        if (createTeamDto.getOrganization() != null) {</b>
+<b class="fc">&nbsp;            Organization organization = organizationRepository.findById(createTeamDto.getOrganization()).orElse(null);</b>
+<b class="fc">&nbsp;            team.setOrganization(organization);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return team;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Team convertDtoToTeam(TeamDto teamDto) {
+<b class="nc">&nbsp;        if (teamDto == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Team team = new Team();</b>
+<b class="nc">&nbsp;        if (teamDto.getId() != null) {</b>
+<b class="nc">&nbsp;            team.setId(teamDto.getId());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (teamDto.getName() != null) {</b>
+<b class="nc">&nbsp;            team.setName(teamDto.getName());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (teamDto.getBusinessDetails() != null) {</b>
+<b class="nc">&nbsp;            team.setBusinessDetails(teamDto.getBusinessDetails());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (teamDto.getBusinessService() != null) {</b>
+<b class="nc">&nbsp;            team.setBusinessService(teamDto.getBusinessService());</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (teamDto.getOrganization() != null &amp;&amp; teamDto.getOrganization().getName() != null) {</b>
+<b class="nc">&nbsp;            Organization organization = organizationRepository.findByName(teamDto.getOrganization().getName()).orElse(null);</b>
+<b class="nc">&nbsp;            team.setOrganization(organization);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return team;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Team convertUpdateTeamDtoToTeam(UpdateTeamDto updateTeamDto) {
+<b class="nc">&nbsp;        if (updateTeamDto == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Team team = new Team();</b>
+<b class="nc">&nbsp;        if (updateTeamDto.getId() != null) {</b>
+<b class="nc">&nbsp;            team.setId(updateTeamDto.getId());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (updateTeamDto.getName() != null) {</b>
+<b class="nc">&nbsp;            team.setName(updateTeamDto.getName());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (updateTeamDto.getBusinessDetails() != null) {</b>
+<b class="nc">&nbsp;            team.setBusinessDetails(updateTeamDto.getBusinessDetails());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (updateTeamDto.getBusinessService() != null) {</b>
+<b class="nc">&nbsp;            team.setBusinessService(updateTeamDto.getBusinessService());</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (updateTeamDto.getUsers() != null) {</b>
+<b class="nc">&nbsp;            List&lt;User&gt; users = userRepository.findAllById(updateTeamDto.getUsers());</b>
+<b class="nc">&nbsp;            team.setUsers(users);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (updateTeamDto.getOrganization() != null) {</b>
+<b class="nc">&nbsp;            Organization organization = organizationRepository.findById(updateTeamDto.getOrganization()).orElse(null);</b>
+<b class="nc">&nbsp;            team.setOrganization(organization);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return team;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public TeamDto convertTeamToDto(Team team) {
+<b class="pc">&nbsp;        if (team == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        TeamDto teamDto = new TeamDto();</b>
+<b class="pc">&nbsp;        if (team.getId() != null) {</b>
+<b class="fc">&nbsp;            teamDto.setId(team.getId());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (team.getName() != null) {</b>
+<b class="fc">&nbsp;            teamDto.setName(team.getName());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (team.getBusinessDetails() != null) {</b>
+<b class="nc">&nbsp;            teamDto.setBusinessDetails(team.getBusinessDetails());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (team.getBusinessService() != null) {</b>
+<b class="nc">&nbsp;            teamDto.setBusinessService(team.getBusinessService());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (team.getCreatedAt() != null) {</b>
+<b class="fc">&nbsp;            teamDto.setCreatedAt(team.getCreatedAt());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (team.getUpdatedAt() != null) {</b>
+<b class="fc">&nbsp;            teamDto.setUpdatedAt(team.getUpdatedAt());</b>
+&nbsp;        }
+&nbsp;
+<b class="pc">&nbsp;        if (team.getOrganization() != null) {</b>
+<b class="fc">&nbsp;            OrganizationDto organizationDto = new OrganizationDto();</b>
+<b class="pc">&nbsp;            if (team.getOrganization().getId() != null) {</b>
+<b class="fc">&nbsp;                organizationDto.setId(team.getOrganization().getId());</b>
+&nbsp;            }
+<b class="pc">&nbsp;            if (team.getOrganization().getName() != null) {</b>
+<b class="fc">&nbsp;                organizationDto.setName(team.getOrganization().getName());</b>
+&nbsp;            }
+<b class="pc">&nbsp;            if (team.getOrganization().getCountry() != null) {</b>
+<b class="fc">&nbsp;                organizationDto.setCountry(team.getOrganization().getCountry());</b>
+&nbsp;            }
+&nbsp;
+<b class="pc">&nbsp;            if (team.getOrganization().getTeams() != null) {</b>
+<b class="nc">&nbsp;                List&lt;TeamDto&gt; teamDtos = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;                for (Team orgTeam : team.getOrganization().getTeams()) {</b>
+<b class="nc">&nbsp;                    TeamDto teamDto1 = new TeamDto();</b>
+<b class="nc">&nbsp;                    if (orgTeam.getId() != null) {</b>
+<b class="nc">&nbsp;                        teamDto1.setId(orgTeam.getId());</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (orgTeam.getName() != null) {</b>
+<b class="nc">&nbsp;                        teamDto1.setName(orgTeam.getName());</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (orgTeam.getBusinessDetails() != null) {</b>
+<b class="nc">&nbsp;                        teamDto1.setBusinessDetails(orgTeam.getBusinessDetails());</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (orgTeam.getBusinessService() != null) {</b>
+<b class="nc">&nbsp;                        teamDto1.setBusinessService(orgTeam.getBusinessService());</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (orgTeam.getCreatedAt() != null) {</b>
+<b class="nc">&nbsp;                        teamDto1.setCreatedAt(orgTeam.getCreatedAt());</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (orgTeam.getUpdatedAt() != null) {</b>
+<b class="nc">&nbsp;                        teamDto1.setUpdatedAt(orgTeam.getUpdatedAt());</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    teamDtos.add(teamDto1);</b>
+&nbsp;                }
+&nbsp;
+&nbsp;                //organizationDto.setTeams(teamDtos);
+&nbsp;            }
+&nbsp;
+<b class="pc">&nbsp;            if (team.getOrganization().getCreatedAt() != null) {</b>
+<b class="fc">&nbsp;                organizationDto.setCreatedAt(team.getOrganization().getCreatedAt());</b>
+&nbsp;            }
+<b class="pc">&nbsp;            if (team.getOrganization().getUpdatedAt() != null) {</b>
+<b class="fc">&nbsp;                organizationDto.setUpdatedAt(team.getOrganization().getUpdatedAt());</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            teamDto.setOrganization(organizationDto);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return teamDto;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > RoleChecker</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.utilities</a>
+</div>
+
+<h1>Coverage Summary for Class: RoleChecker (com.lkup.accounts.utilities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoleChecker</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (2/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    7.1%
+  </span>
+  <span class="absValue">
+    (1/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.7%
+  </span>
+  <span class="absValue">
+    (5/34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.utilities;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.User;
+&nbsp;import org.springframework.security.core.Authentication;
+&nbsp;import org.springframework.security.core.GrantedAuthority;
+&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class RoleChecker {</b>
+&nbsp;
+&nbsp;    public boolean hasRole(String role) {
+<b class="nc">&nbsp;        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</b>
+<b class="nc">&nbsp;        if (authentication == null) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return authentication.getAuthorities().stream()</b>
+<b class="nc">&nbsp;                .anyMatch(grantedAuthority -&gt; grantedAuthority.getAuthority().equals(role));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean hasAnyRole(List&lt;String&gt; roles) {
+<b class="nc">&nbsp;        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</b>
+<b class="nc">&nbsp;        if (authentication == null) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        List&lt;String&gt; authorities = authentication.getAuthorities().stream()</b>
+<b class="nc">&nbsp;                .map(GrantedAuthority::getAuthority)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="nc">&nbsp;        return roles.stream().anyMatch(authorities::contains);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean hasSuperAdminRole() {
+<b class="fc">&nbsp;        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</b>
+<b class="pc">&nbsp;        if (authentication == null) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        User user = (User) authentication.getPrincipal();</b>
+<b class="fc">&nbsp;        return user.getRole().getName().equals(RoleConstants.SUPER_ADMIN_ROLE);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean hasUserTeamAccess(String teamId) {
+<b class="nc">&nbsp;        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</b>
+<b class="nc">&nbsp;        if (authentication == null) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        User user = (User) authentication.getPrincipal();</b>
+<b class="nc">&nbsp;        return user.getTeams().stream()</b>
+<b class="nc">&nbsp;                .anyMatch(team -&gt; team.getId().equals(teamId));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean hasUserAccessTeamAndOrganization(String requestTenantId, String requestedTeamId) {
+<b class="nc">&nbsp;        if (hasSuperAdminRole()) {</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</b>
+<b class="nc">&nbsp;        if (authentication == null) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        User user = (User) authentication.getPrincipal();</b>
+<b class="nc">&nbsp;        boolean isTeamAccess = user.getTeams().stream()</b>
+<b class="nc">&nbsp;                .anyMatch(team -&gt; team.getId().equals(requestedTeamId));</b>
+<b class="nc">&nbsp;        boolean isOrganizationAccess = user.getOrganization().getId().equals(requestTenantId);</b>
+&nbsp;
+<b class="nc">&nbsp;        return isTeamAccess &amp;&amp; isOrganizationAccess;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

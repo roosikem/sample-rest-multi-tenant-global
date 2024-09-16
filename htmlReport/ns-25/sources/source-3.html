@@ -1,0 +1,108 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TeamRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.repository.global</a>
+</div>
+
+<h1>Coverage Summary for Class: TeamRepository (com.lkup.accounts.repository.global)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">TeamRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.repository.global;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Team;
+&nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
+&nbsp;import org.springframework.data.mongodb.repository.Query;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface TeamRepository extends MongoRepository&lt;Team, String&gt; {
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;_id&#39; : ?0 }&quot;)
+&nbsp;    Optional&lt;Team&gt; findTeamById(String id);
+&nbsp;
+&nbsp;    @Query(value = &quot;{}&quot;, count = true)
+&nbsp;    long countAll();
+&nbsp;
+&nbsp;    @Query(value = &quot;{}&quot;)
+&nbsp;    List&lt;Team&gt; findAllTeams();
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;organization._id&#39; : ?0 }&quot;)
+&nbsp;    List&lt;Team&gt; findTeamsByOrganizationId(String organizationId);
+&nbsp;
+&nbsp;    @Override
+&nbsp;    &lt;S extends Team&gt; S save(S entity);
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;_id&#39; : ?0 }&quot;, delete = true)
+&nbsp;    void deleteTeam(String id);
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;name&#39; : { $eq : ?0 } }&quot;)
+&nbsp;    Optional&lt;Team&gt; findByName(String name);
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;name&#39; : ?0, &#39;organization.id&#39; : ?1 }&quot;)
+&nbsp;    Optional&lt;Team&gt; findByNameAndOrganizationId(String name, String id);
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;id&#39; : ?0, &#39;organization.id&#39; : ?1 }&quot;)
+&nbsp;    Optional&lt;Team&gt; findByIdAndOrganizationId(String id, String orgId);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

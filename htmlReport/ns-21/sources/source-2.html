@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > APPIdMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: APPIdMapper (com.lkup.accounts.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">APPIdMapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (1/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4%
+  </span>
+  <span class="absValue">
+    (1/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.mapper;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.AppId;
+&nbsp;import com.lkup.accounts.document.Organization;
+&nbsp;import com.lkup.accounts.document.Team;
+&nbsp;import com.lkup.accounts.dto.appId.AppIdDto;
+&nbsp;import com.lkup.accounts.dto.appId.CreateUpdateAppIdDto;
+&nbsp;import com.lkup.accounts.dto.organization.OrganizationDto;
+&nbsp;import com.lkup.accounts.service.OrganizationService;
+&nbsp;import com.lkup.accounts.service.TeamService;
+&nbsp;import org.modelmapper.ModelMapper;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class APPIdMapper {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ModelMapper modelMapper;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private OrganizationService organizationService;
+&nbsp;
+&nbsp;    public AppId convertCreateDtoToAPPIdEntity(CreateUpdateAppIdDto createUpdateAppIdDto) {
+<b class="nc">&nbsp;        AppId appId = modelMapper.map(createUpdateAppIdDto, AppId.class);</b>
+<b class="nc">&nbsp;        if (null != createUpdateAppIdDto.getTeam()) {</b>
+<b class="nc">&nbsp;            appId.setTeamId(createUpdateAppIdDto.getTeam());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return modelMapper.map(createUpdateAppIdDto, AppId.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public CreateUpdateAppIdDto convertAppIdToCreateUpdateDto(AppId appId) {
+<b class="nc">&nbsp;        return modelMapper.map(appId, CreateUpdateAppIdDto.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public AppIdDto convertAPPIdToDto(AppId appId) {
+<b class="nc">&nbsp;         return modelMapper.map(appId, AppIdDto.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;AppIdDto&gt; convertAPPIdsToDtos(List&lt;AppId&gt; appIds) {
+<b class="nc">&nbsp;        List&lt;AppIdDto&gt; appIdsList = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        if (appIds != null) {</b>
+<b class="nc">&nbsp;            for (AppId appId : appIds) {</b>
+<b class="nc">&nbsp;                appIdsList.add(convertAPPIdToDto(appId));</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return appIdsList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public AppId convertAPPIdDtoToAppId(AppIdDto appIdDto) {
+<b class="nc">&nbsp;        return modelMapper.map(appIdDto, AppId.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;AppId&gt; convertAPPIdsDtoToAppId(List&lt;AppIdDto&gt; appIds) {
+<b class="nc">&nbsp;        List&lt;AppId&gt; appIdsList = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        if (appIds != null) {</b>
+<b class="nc">&nbsp;            for (AppIdDto appId : appIds) {</b>
+<b class="nc">&nbsp;                appIdsList.add(convertAPPIdDtoToAppId(appId));</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return appIdsList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;AppId&gt; convertIdsToAppId(List&lt;String&gt; appIds) {
+<b class="nc">&nbsp;        List&lt;AppId&gt; appIdsList = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        if (appIds != null) {</b>
+<b class="nc">&nbsp;            for (String appId : appIds) {</b>
+<b class="nc">&nbsp;                AppId appIdDoc = new AppId();</b>
+<b class="nc">&nbsp;                appIdDoc.setId(appId);</b>
+<b class="nc">&nbsp;                appIdsList.add(appIdDoc);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return appIdsList;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

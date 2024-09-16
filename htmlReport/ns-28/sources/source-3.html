@@ -1,0 +1,100 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DeploymentRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.repository.tenant</a>
+</div>
+
+<h1>Coverage Summary for Class: DeploymentRepository (com.lkup.accounts.repository.tenant)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DeploymentRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.repository.tenant;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Deployment;
+&nbsp;import org.springframework.data.mongodb.repository.MongoRepository;
+&nbsp;import org.springframework.data.mongodb.repository.Query;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;public interface DeploymentRepository extends MongoRepository&lt;Deployment, String&gt; {
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;_id&#39; : { $eq : ?0 } }&quot;)
+&nbsp;    Optional&lt;Deployment&gt; findDeploymentById(String id);
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;organization.id&#39; : ?#{T(com.lkup.accounts.context.RequestContext).getRequestContext().getTenantId()} &quot; +
+&nbsp;            &quot;, &#39;team.id&#39; : ?#{T(com.lkup.accounts.context.RequestContext).getRequestContext().getTeamId()} }&quot;)
+&nbsp;    List&lt;Deployment&gt; findAllDeployments();
+&nbsp;
+&nbsp;    Optional&lt;Deployment&gt; findByDeploymentName(String name);
+&nbsp;
+&nbsp;    @Query(value = &quot;{}&quot;, count = true)
+&nbsp;    long countAll();
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;_id&#39; : { $eq : ?0 } }&quot;)
+&nbsp;    Deployment updateDeployment(Deployment deployment);
+&nbsp;
+&nbsp;    @Override
+&nbsp;    &lt;S extends Deployment&gt; S save(S entity);
+&nbsp;
+&nbsp;    @Query(value = &quot;{ &#39;_id&#39; : { $eq : ?0 } }&quot;, delete = true)
+&nbsp;    void deleteDeployment(String id);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

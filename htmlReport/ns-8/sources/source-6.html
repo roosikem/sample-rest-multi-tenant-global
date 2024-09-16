@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DeploymentController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: DeploymentController (com.lkup.accounts.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeploymentController</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (4/24)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DeploymentController$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (4/24)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.controller;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Deployment;
+&nbsp;import com.lkup.accounts.dto.deployment.CreateDeploymentDto;
+&nbsp;import com.lkup.accounts.dto.deployment.DeploymentDto;
+&nbsp;import com.lkup.accounts.dto.deployment.UpdateDeploymentDto;
+&nbsp;import com.lkup.accounts.mapper.DeploymentMapper;
+&nbsp;import com.lkup.accounts.service.ConfigurationService;
+&nbsp;import com.lkup.accounts.service.DeploymentService;
+&nbsp;import com.lkup.accounts.utilities.PermissionConstants;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.validation.annotation.Validated;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.net.URI;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/v1/deployments&quot;)
+&nbsp;public class DeploymentController {
+&nbsp;
+&nbsp;    private final DeploymentService deploymentService;
+&nbsp;    private final DeploymentMapper deploymentMapper;
+&nbsp;    private final ConfigurationService configurationService;
+&nbsp;
+<b class="fc">&nbsp;    public DeploymentController(DeploymentService deploymentService, ConfigurationService configurationService, DeploymentMapper deploymentMapper) {</b>
+<b class="fc">&nbsp;        this.deploymentService = deploymentService;</b>
+<b class="fc">&nbsp;        this.deploymentMapper = deploymentMapper;</b>
+<b class="fc">&nbsp;        this.configurationService = configurationService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_DEPLOYMENT + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_DEPLOYMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;DeploymentDto&gt;&gt; getAllDeployments() {
+<b class="nc">&nbsp;        List&lt;Deployment&gt; deployments = deploymentService.findAllDeployments();</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(deploymentMapper.convertDeploymentsToDtos(deployments));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_DEPLOYMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;DeploymentDto&gt; createDeployment(@RequestBody @Validated CreateDeploymentDto createDeploymentdto) {
+<b class="nc">&nbsp;        Deployment deployment = deploymentMapper.convertCreateDtoToDeployment(createDeploymentdto);</b>
+<b class="nc">&nbsp;        Deployment createDeployment = deploymentService.createDeployment(deployment);</b>
+<b class="nc">&nbsp;        Optional&lt;Deployment&gt; publishDeployment = deploymentService.publishConfiguration(createDeployment);</b>
+<b class="nc">&nbsp;        if (publishDeployment.isPresent())</b>
+<b class="nc">&nbsp;            createDeployment = publishDeployment.get();</b>
+<b class="nc">&nbsp;        DeploymentDto responseDeploymentDto = deploymentMapper.convertDeploymentToDto(createDeployment);</b>
+<b class="nc">&nbsp;        return ResponseEntity.created(URI.create(&quot;/api/v1/deployments/&quot; + responseDeploymentDto.getId())).body(responseDeploymentDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_DEPLOYMENT + &quot;&#39;,&#39;&quot; + PermissionConstants.CREATE_DEPLOYMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;DeploymentDto&gt; getDeploymentById(@PathVariable String id) {
+<b class="nc">&nbsp;        Optional&lt;Deployment&gt; deployment = deploymentService.findDeploymentById(id);</b>
+<b class="nc">&nbsp;        return deployment.map(deploymentMapper::convertDeploymentToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.UPDATE_DEPLOYMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;DeploymentDto&gt; updateDeployment(@PathVariable String id, @RequestBody @Validated UpdateDeploymentDto deploymentDto) {
+<b class="nc">&nbsp;        deploymentDto.setId(id);</b>
+<b class="nc">&nbsp;        Optional&lt;Deployment&gt; updatedDeployment = deploymentService.updateDeployment(deploymentMapper.convertUpdateDtoToDeployment(deploymentDto));</b>
+<b class="nc">&nbsp;        if (updatedDeployment.isPresent())</b>
+<b class="nc">&nbsp;            updatedDeployment = deploymentService.publishConfiguration(updatedDeployment.get());</b>
+<b class="nc">&nbsp;        return updatedDeployment.map(deploymentMapper::convertDeploymentToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

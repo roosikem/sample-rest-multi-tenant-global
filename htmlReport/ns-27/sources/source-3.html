@@ -1,0 +1,158 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OrganizationTeamValidator</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.utilities</a>
+</div>
+
+<h1>Coverage Summary for Class: OrganizationTeamValidator (com.lkup.accounts.utilities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrganizationTeamValidator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    11.8%
+  </span>
+  <span class="absValue">
+    (2/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.utilities;
+&nbsp;
+&nbsp;import com.lkup.accounts.context.RequestContext;
+&nbsp;import com.lkup.accounts.exceptions.BadRequestException;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;@Component
+&nbsp;public class OrganizationTeamValidator {
+&nbsp;    private final RoleChecker roleChecker;
+&nbsp;
+<b class="fc">&nbsp;    public OrganizationTeamValidator(RoleChecker roleChecker) {</b>
+<b class="fc">&nbsp;        this.roleChecker = roleChecker;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean validateOrganizationTeam(String organizationId, String teamId) {
+<b class="nc">&nbsp;        String requestTenantId = null;</b>
+<b class="nc">&nbsp;        String requestTeamId = null;</b>
+<b class="nc">&nbsp;        if (!roleChecker.hasSuperAdminRole()) {</b>
+<b class="nc">&nbsp;            requestTenantId = RequestContext.getRequestContext().getTenantId();</b>
+<b class="nc">&nbsp;            requestTeamId = RequestContext.getRequestContext().getTeamId();</b>
+&nbsp;
+<b class="nc">&nbsp;            if (!requestTeamId.equals(teamId)) {</b>
+<b class="nc">&nbsp;                throw new BadRequestException(&quot;Invalid Team ID. Team ID should match the team ID in request&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (!requestTenantId.equals(organizationId)) {</b>
+<b class="nc">&nbsp;                throw new BadRequestException(&quot;Invalid Tenant ID. Tenant ID should match the tenant ID in request&quot;);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            requestTenantId = organizationId;</b>
+<b class="nc">&nbsp;            requestTeamId = teamId;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (!roleChecker.hasUserAccessTeamAndOrganization(requestTenantId, requestTeamId)) {</b>
+<b class="nc">&nbsp;            throw new BadRequestException(&quot;User not authorized to perform this action&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isSuperAdmin() {
+<b class="nc">&nbsp;        return roleChecker.hasSuperAdminRole();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,209 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SecurityFilterChainConfiguration</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.config</a>
+</div>
+
+<h1>Coverage Summary for Class: SecurityFilterChainConfiguration (com.lkup.accounts.config)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SecurityFilterChainConfiguration</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (25/25)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SecurityFilterChainConfiguration$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">SecurityFilterChainConfiguration$$SpringCGLIB$$FastClass$$0</td>
+  </tr>
+  <tr>
+    <td class="name">SecurityFilterChainConfiguration$$SpringCGLIB$$FastClass$$1</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (25/25)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.config;
+&nbsp;
+&nbsp;import com.lkup.accounts.context.RequestHandlerInterceptor;
+&nbsp;import com.lkup.accounts.context.jwt.JwtAuthenticationFilter;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.context.annotation.Lazy;
+&nbsp;import org.springframework.security.authentication.AuthenticationProvider;
+&nbsp;import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+&nbsp;import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+&nbsp;import org.springframework.security.config.http.SessionCreationPolicy;
+&nbsp;import org.springframework.security.web.AuthenticationEntryPoint;
+&nbsp;import org.springframework.security.web.SecurityFilterChain;
+&nbsp;import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+&nbsp;import org.springframework.web.cors.CorsConfiguration;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@EnableWebSecurity
+&nbsp;@EnableMethodSecurity
+&nbsp;public class SecurityFilterChainConfiguration {
+&nbsp;
+&nbsp;    private final AuthenticationEntryPoint authenticationEntryPoint;
+&nbsp;    private final AuthenticationProvider authenticationProvider;
+&nbsp;    private JwtAuthenticationFilter jwtFilter;
+&nbsp;
+&nbsp;    @Value(&quot;#{&#39;${cors.allowed-origins}&#39;.split(&#39;,&#39;)}&quot;)
+&nbsp;    private List&lt;String&gt; allowedOrigins;
+&nbsp;
+&nbsp;    @Value(&quot;#{&#39;${cors.allowed-methods}&#39;.split(&#39;,&#39;)}&quot;)
+&nbsp;    private List&lt;String&gt; allowedMethods;
+&nbsp;
+&nbsp;    @Value(&quot;#{&#39;${cors.allowed-headers}&#39;.split(&#39;,&#39;)}&quot;)
+&nbsp;    private List&lt;String&gt; allowedHeaders;
+&nbsp;
+<b class="fc">&nbsp;    private static final String[] SWAGGER_WHITELIST = {&quot;/swagger-ui/**&quot;, &quot;/api-docs/**&quot;, &quot;/v3/api-docs/**&quot;, &quot;/swagger-resources/**&quot;, &quot;/swagger-resources&quot;, &quot;/gtp-config-ui/**&quot;, &quot;/swagger-ui.html&quot;};</b>
+&nbsp;
+&nbsp;    public SecurityFilterChainConfiguration(AuthenticationEntryPoint authenticationEntryPoint,
+<b class="fc">&nbsp;                                            AuthenticationProvider authenticationProvider, JwtAuthenticationFilter jwtFilter, RequestHandlerInterceptor requestHandlerInterceptor) {</b>
+<b class="fc">&nbsp;        this.authenticationEntryPoint = authenticationEntryPoint;</b>
+<b class="fc">&nbsp;        this.authenticationProvider = authenticationProvider;</b>
+<b class="fc">&nbsp;        this.jwtFilter = jwtFilter;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    @Lazy
+&nbsp;    public void setJwtFilter(JwtAuthenticationFilter jwtFilter) {
+<b class="fc">&nbsp;        this.jwtFilter = jwtFilter;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+&nbsp;
+<b class="fc">&nbsp;        return http</b>
+<b class="fc">&nbsp;                .csrf(AbstractHttpConfigurer::disable)</b>
+<b class="fc">&nbsp;                .cors(cors -&gt; cors.configurationSource(request -&gt; {</b>
+<b class="fc">&nbsp;                    CorsConfiguration configuration = new CorsConfiguration();</b>
+<b class="fc">&nbsp;                    configuration.setAllowedOrigins(allowedOrigins);</b>
+<b class="fc">&nbsp;                    configuration.setAllowedMethods(allowedMethods);</b>
+<b class="fc">&nbsp;                    configuration.setAllowedHeaders(allowedHeaders);</b>
+<b class="fc">&nbsp;                    return configuration;</b>
+&nbsp;                }))
+<b class="fc">&nbsp;                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)</b>
+&nbsp;
+<b class="fc">&nbsp;                .authorizeHttpRequests(auth -&gt; {</b>
+<b class="fc">&nbsp;                    auth.requestMatchers(&quot;/api/v1/auth/authenticate&quot;, Arrays.toString(SWAGGER_WHITELIST)).permitAll();</b>
+<b class="fc">&nbsp;                    auth.requestMatchers(SWAGGER_WHITELIST).permitAll();</b>
+<b class="fc">&nbsp;                    auth.anyRequest().authenticated();</b>
+&nbsp;                })
+<b class="fc">&nbsp;                .exceptionHandling(exception -&gt; exception.authenticationEntryPoint(authenticationEntryPoint))</b>
+<b class="fc">&nbsp;                .sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</b>
+<b class="fc">&nbsp;                .authenticationProvider(authenticationProvider)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public WebSecurityCustomizer webSecurityCustomizer() {
+<b class="fc">&nbsp;        return web -&gt; web.ignoring().requestMatchers(</b>
+<b class="fc">&nbsp;                Arrays.toString(SWAGGER_WHITELIST)</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

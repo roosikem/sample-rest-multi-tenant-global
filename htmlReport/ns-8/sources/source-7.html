@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > EnvironmentController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: EnvironmentController (com.lkup.accounts.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EnvironmentController</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (1/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.6%
+  </span>
+  <span class="absValue">
+    (3/22)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">EnvironmentController$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (1/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.6%
+  </span>
+  <span class="absValue">
+    (3/22)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.controller;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Environment;
+&nbsp;import com.lkup.accounts.dto.environment.CreateEnvironmentDto;
+&nbsp;import com.lkup.accounts.dto.environment.EnvironmentDto;
+&nbsp;import com.lkup.accounts.dto.environment.UpdateEnvironmentDto;
+&nbsp;import com.lkup.accounts.mapper.EnvironmentMapper;
+&nbsp;import com.lkup.accounts.service.EnvironmentService;
+&nbsp;import com.lkup.accounts.utilities.PermissionConstants;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.validation.annotation.Validated;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.net.URI;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/v1/environments&quot;)
+&nbsp;public class EnvironmentController {
+&nbsp;
+&nbsp;    private final EnvironmentService environmentService;
+&nbsp;    private final EnvironmentMapper environmentMapper;
+&nbsp;
+<b class="fc">&nbsp;    public EnvironmentController(EnvironmentService environmentService, EnvironmentMapper environmentMapper) {</b>
+<b class="fc">&nbsp;        this.environmentService = environmentService;</b>
+<b class="fc">&nbsp;        this.environmentMapper = environmentMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_ENVIRONMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;EnvironmentDto&gt; createEnvironment(@RequestBody @Validated CreateEnvironmentDto createEnvironmentDto) {
+<b class="nc">&nbsp;        Environment environment = environmentMapper.convertCreateDtoToEnvironment(createEnvironmentDto);</b>
+<b class="nc">&nbsp;        Environment createdEnvironment = environmentService.createEnvironment(environment);</b>
+<b class="nc">&nbsp;        EnvironmentDto environmentDto = environmentMapper.convertEnvironmentToDto(createdEnvironment);</b>
+<b class="nc">&nbsp;        return ResponseEntity.created(URI.create(&quot;/api/v1/environments/&quot; + environmentDto.getId())).body(environmentDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_ENVIRONMENT + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_ENVIRONMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;EnvironmentDto&gt; getEnvironmentById(@PathVariable String id) {
+<b class="nc">&nbsp;        Optional&lt;Environment&gt; environment = environmentService.findEnvironmentById(id);</b>
+<b class="nc">&nbsp;        return environment.map(environmentMapper::convertEnvironmentToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_ENVIRONMENT + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_ENVIRONMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Iterable&lt;EnvironmentDto&gt;&gt; getAllEnvironments() {
+<b class="nc">&nbsp;        List&lt;Environment&gt; environments = environmentService.findAllEnvironments();</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(environmentMapper.convertEnvironmentsToDtos(environments));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.UPDATE_ENVIRONMENT + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_ENVIRONMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;EnvironmentDto&gt; updateEnvironment(@PathVariable String id, @RequestBody UpdateEnvironmentDto updateEnvironmentDto) {
+<b class="nc">&nbsp;        updateEnvironmentDto.setId(id);</b>
+<b class="nc">&nbsp;        Optional&lt;Environment&gt; updatedEnvironment = environmentService.updateEnvironment(environmentMapper.convertUpdateDtoToEnvironment(updateEnvironmentDto));</b>
+<b class="nc">&nbsp;        return updatedEnvironment.map(environmentMapper::convertEnvironmentToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.DELETE_ENVIRONMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Void&gt; deleteEnvironment(@PathVariable String id) {
+<b class="nc">&nbsp;        environmentService.deleteEnvironment(id);</b>
+<b class="nc">&nbsp;        return ResponseEntity.noContent().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/total&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_ENVIRONMENT + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_ENVIRONMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Long&gt; getTotalEnvironments() {
+<b class="nc">&nbsp;        return ResponseEntity.ok(environmentService.getTotalEnvironments());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{teamId}/total&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_ENVIRONMENT + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_ENVIRONMENT + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Long&gt; getTotalEnvironmentsByTeam(@PathVariable(&quot;teamId&quot;) String teamId) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(environmentService.getTotalEnvironments());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

@@ -2,6 +2,8 @@ package com.lkup.accounts.context.jwt;
 
 import com.lkup.accounts.document.Role;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +44,7 @@ public class JwtUtils {
     }
 
     public String getSubject(String token) {
+        Claims claims =   getClaims(token);
         return getClaims(token).getSubject();
     }
 
@@ -60,11 +63,11 @@ public class JwtUtils {
     }
 
     private Claims getClaims(String token) {
-        return Jwts
+        JwtParser build = Jwts
                 .parserBuilder()
                 .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .build();
+        Jws<Claims> claimsJws = build.parseClaimsJws(token);
+        return claimsJws.getBody();
     }
 }

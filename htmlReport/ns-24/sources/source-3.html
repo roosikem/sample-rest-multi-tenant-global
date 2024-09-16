@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DeploymentCustomRepositoryImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.repository.custom.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: DeploymentCustomRepositoryImpl (com.lkup.accounts.repository.custom.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeploymentCustomRepositoryImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    11.1%
+  </span>
+  <span class="absValue">
+    (1/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.7%
+  </span>
+  <span class="absValue">
+    (2/35)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DeploymentCustomRepositoryImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    11.1%
+  </span>
+  <span class="absValue">
+    (1/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.7%
+  </span>
+  <span class="absValue">
+    (2/35)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.repository.custom.impl;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Deployment;
+&nbsp;import com.lkup.accounts.repository.custom.DeploymentCustomRepository;
+&nbsp;import com.lkup.accounts.repository.custom.QueryCriteria;
+&nbsp;import org.springframework.beans.factory.annotation.Qualifier;
+&nbsp;import org.springframework.data.mongodb.core.MongoTemplate;
+&nbsp;import org.springframework.data.mongodb.core.query.Criteria;
+&nbsp;import org.springframework.data.mongodb.core.query.Query;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public class DeploymentCustomRepositoryImpl implements DeploymentCustomRepository {
+&nbsp;
+&nbsp;    private final MongoTemplate mongoTemplate;
+&nbsp;
+<b class="fc">&nbsp;    public DeploymentCustomRepositoryImpl(@Qualifier(&quot;tenantMongoTemplate&quot;) MongoTemplate mongoTemplate) {</b>
+<b class="fc">&nbsp;        this.mongoTemplate = mongoTemplate;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;Deployment&gt; findDeploymentById(QueryCriteria queryCriteria, String id) {
+<b class="nc">&nbsp;        return findById(queryCriteria, id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Deployment&gt; findAllDeployments(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId())</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        return mongoTemplate.find(query, Deployment.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;Deployment&gt; findByDeploymentName(QueryCriteria queryCriteria, String name) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;name&quot;).is(name)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        Deployment deployment = mongoTemplate.findOne(query, Deployment.class);</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(deployment);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public long countAll(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId())</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        return mongoTemplate.count(query, Deployment.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Deployment updateDeployment(Deployment deployment) {
+<b class="nc">&nbsp;        return mongoTemplate.save(deployment);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public &lt;S extends Deployment&gt; S save(S entity) {
+<b class="nc">&nbsp;        return mongoTemplate.save(entity);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteDeployment(QueryCriteria queryCriteria, String id) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;id&quot;).is(id)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        mongoTemplate.remove(query, Deployment.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;Deployment&gt; findById(QueryCriteria queryCriteria, String id) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;id&quot;).is(id)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        Deployment deployment = mongoTemplate.findOne(query, Deployment.class);</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(deployment);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

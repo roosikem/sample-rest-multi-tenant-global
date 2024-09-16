@@ -1,0 +1,280 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GlobalExceptionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.exceptions</a>
+</div>
+
+<h1>Coverage Summary for Class: GlobalExceptionHandler (com.lkup.accounts.exceptions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GlobalExceptionHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.8%
+  </span>
+  <span class="absValue">
+    (1/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.1%
+  </span>
+  <span class="absValue">
+    (1/48)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.exceptions;
+&nbsp;
+&nbsp;import com.lkup.accounts.dto.error.ErrorDto;
+&nbsp;import com.lkup.accounts.exceptions.apikey.APIKeyNotFoundException;
+&nbsp;import com.lkup.accounts.exceptions.apikey.APIKeyServiceException;
+&nbsp;import com.lkup.accounts.exceptions.aws.AwsS3UploadException;
+&nbsp;import com.lkup.accounts.exceptions.environment.EnvironmentNotFoundException;
+&nbsp;import com.lkup.accounts.exceptions.environment.EnvironmentServiceException;
+&nbsp;import com.lkup.accounts.exceptions.role.RoleNotFoundException;
+&nbsp;import com.lkup.accounts.exceptions.role.RoleServiceException;
+&nbsp;import com.lkup.accounts.exceptions.user.UserNotFoundException;
+&nbsp;import com.lkup.accounts.exceptions.user.UserServiceException;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.AccessDeniedException;
+&nbsp;import org.springframework.security.access.AuthorizationServiceException;
+&nbsp;import org.springframework.security.core.AuthenticationException;
+&nbsp;import org.springframework.validation.FieldError;
+&nbsp;import org.springframework.web.bind.MethodArgumentNotValidException;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;import org.springframework.web.bind.annotation.RestControllerAdvice;
+&nbsp;import org.springframework.web.context.request.WebRequest;
+&nbsp;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;@RestControllerAdvice
+<b class="fc">&nbsp;public class GlobalExceptionHandler {</b>
+&nbsp;
+&nbsp;    @ExceptionHandler(APIKeyNotFoundException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleAPIKeyNotFoundException(APIKeyNotFoundException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.NOT_FOUND, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.NOT_FOUND);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(APIKeyServiceException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleAPIKeyServiceException(APIKeyServiceException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(RoleNotFoundException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleRoleNotFoundException(RoleNotFoundException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.NOT_FOUND, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.NOT_FOUND);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(RoleServiceException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleRoleServiceException(RoleServiceException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(UserNotFoundException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.NOT_FOUND, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.NOT_FOUND);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(UserServiceException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleUserServiceException(UserServiceException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(AuthenticationException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.UNAUTHORIZED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(AuthorizationServiceException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleAuthorizationServiceException(AuthorizationServiceException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.FORBIDDEN, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.FORBIDDEN);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(IllegalArgumentException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(AccessDeniedException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleAccessDeniedExceptions(AccessDeniedException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.UNAUTHORIZED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(Exception.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleAllExceptions(Exception ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @ExceptionHandler(EnvironmentNotFoundException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleUserServiceException(EnvironmentNotFoundException ex) {
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(EnvironmentServiceException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleUserServiceException(EnvironmentServiceException ex) {
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(AwsS3UploadException.class)
+&nbsp;    public ResponseEntity&lt;ErrorDto&gt; handleAwsS3UploadException(AwsS3UploadException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.BAD_GATEWAY);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(MethodArgumentNotValidException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleMethodArgumentNotValidException(MethodArgumentNotValidException e, WebRequest request) {
+<b class="nc">&nbsp;        StringBuilder strBuilder = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;        e.getBindingResult().getAllErrors().forEach((error) -&gt; {</b>
+&nbsp;            String fieldName;
+&nbsp;            try {
+<b class="nc">&nbsp;                fieldName = ((FieldError) error).getField();</b>
+&nbsp;
+<b class="nc">&nbsp;            } catch (ClassCastException ex) {</b>
+<b class="nc">&nbsp;                fieldName = error.getObjectName();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            String message = error.getDefaultMessage();</b>
+<b class="nc">&nbsp;            strBuilder.append(String.format(&quot;%s: %s\n&quot;, fieldName, message));</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, strBuilder.substring(0, strBuilder.length() - 1), request);</b>
+&nbsp;
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(BadRequestException.class)
+&nbsp;    public ResponseEntity&lt;Object&gt; handleBadRequest(Exception ex, WebRequest request) {
+<b class="nc">&nbsp;        String errorMessage = ex.getMessage();</b>
+<b class="nc">&nbsp;        if (Objects.nonNull(ex.getCause())) {</b>
+<b class="nc">&nbsp;            errorMessage += &quot;-&quot; + ex.getCause().getLocalizedMessage();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, errorMessage, request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(InvalidTenantIdException.class)
+&nbsp;    public ResponseEntity&lt;ErrorDto&gt; handleInvalidTenantIdException(InvalidTenantIdException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(InvalidTeamIdException.class)
+&nbsp;    public ResponseEntity&lt;ErrorDto&gt; handleInvalidTeamIdException(InvalidTeamIdException ex, WebRequest request) {
+<b class="nc">&nbsp;        ErrorDto message = buildMessage(HttpStatus.BAD_REQUEST, ex.getMessage(), request);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(message, HttpStatus.BAD_GATEWAY);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static ErrorDto buildMessage(HttpStatus internalServerError, String ex, WebRequest request) {
+<b class="nc">&nbsp;        return new ErrorDto(</b>
+<b class="nc">&nbsp;                internalServerError.value(),</b>
+&nbsp;                new Date(),
+&nbsp;                ex,
+<b class="nc">&nbsp;                request.getDescription(false));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

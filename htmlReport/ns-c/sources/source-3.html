@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UpdateConfigurationDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.dto.configuration</a>
+</div>
+
+<h1>Coverage Summary for Class: UpdateConfigurationDto (com.lkup.accounts.dto.configuration)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UpdateConfigurationDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.dto.configuration;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import jakarta.validation.constraints.NotBlank;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.Setter;
+&nbsp;
+&nbsp;@Getter
+<b class="nc">&nbsp;@Setter</b>
+<b class="nc">&nbsp;public class UpdateConfigurationDto {</b>
+&nbsp;    @NotBlank(message = &quot;id cannot be blank&quot;)
+<b class="nc">&nbsp;    private String id;</b>
+&nbsp;
+&nbsp;    @NotNull
+&nbsp;    @NotBlank(message = &quot;Name cannot be blank&quot;)
+&nbsp;    @Schema(name = &quot;Configuration Name&quot;, example = &quot;dev config&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private String name;</b>
+&nbsp;
+&nbsp;    @Schema(name = &quot;Configuration description&quot;)
+<b class="nc">&nbsp;    private String description;</b>
+&nbsp;
+&nbsp;    @Schema(name = &quot;Organization Id&quot;, example = &quot;12344&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private String organization;</b>
+&nbsp;
+&nbsp;    @Schema(name = &quot;Team Id&quot;, example = &quot;12344&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private String team;</b>
+&nbsp;
+<b class="nc">&nbsp;    private String widgetColor;</b>
+&nbsp;
+<b class="nc">&nbsp;    private String alignment;</b>
+&nbsp;
+<b class="nc">&nbsp;    private String sideSpace;</b>
+&nbsp;
+<b class="nc">&nbsp;    private String bottomSpace;</b>
+&nbsp;
+<b class="nc">&nbsp;    private Integer launcherButtonVisibility;</b>
+&nbsp;
+&nbsp;    @Schema(name = &quot;Widget Configuration&quot;, example = &quot;12344&quot;)
+<b class="nc">&nbsp;    private Object widgetConfig;</b>
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;environment cannot be blank&quot;)
+&nbsp;    @Schema(name = &quot;Environment Id&quot;, example = &quot;12344&quot;)
+<b class="nc">&nbsp;    private String environment;</b>
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;appId cannot be blank&quot;)
+&nbsp;    @Schema(name = &quot;App Id&quot;, example = &quot;12344&quot;)
+<b class="nc">&nbsp;    private String appId;</b>
+&nbsp;
+<b class="nc">&nbsp;    private String hostUrl;</b>
+&nbsp;
+<b class="nc">&nbsp;    private String authTokenUrl;</b>
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;language cannot be blank&quot;)
+&nbsp;    @Schema(name = &quot;Language&quot;, example = &quot;en&quot;)
+<b class="nc">&nbsp;    private String language;</b>
+&nbsp;
+<b class="nc">&nbsp;    private String status;</b>
+<b class="nc">&nbsp;    private String configUrl;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

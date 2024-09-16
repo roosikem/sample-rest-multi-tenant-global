@@ -1,0 +1,178 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CountryMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: CountryMapper (com.lkup.accounts.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CountryMapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.6%
+  </span>
+  <span class="absValue">
+    (1/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.mapper;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Country;
+&nbsp;import com.lkup.accounts.dto.country.CountryDto;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class CountryMapper {</b>
+&nbsp;
+&nbsp;    public CountryDto convertCountryToDto(Country country) {
+<b class="nc">&nbsp;        if (country == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        CountryDto countryDto = new CountryDto();</b>
+<b class="nc">&nbsp;        if (country.getId() != null) {</b>
+<b class="nc">&nbsp;            countryDto.setId(country.getId());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (country.getName() != null) {</b>
+<b class="nc">&nbsp;            countryDto.setName(country.getName());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (country.getCode() != null) {</b>
+<b class="nc">&nbsp;            countryDto.setCode(country.getCode());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return countryDto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Country convertDtoToCountry(CountryDto countryDto) {
+<b class="nc">&nbsp;        if (countryDto == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        Country country = new Country();</b>
+<b class="nc">&nbsp;        if (countryDto.getId() != null) {</b>
+<b class="nc">&nbsp;            country.setId(countryDto.getId());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (countryDto.getName() != null) {</b>
+<b class="nc">&nbsp;            country.setName(countryDto.getName());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (countryDto.getCode() != null) {</b>
+<b class="nc">&nbsp;            country.setCode(countryDto.getCode());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return country;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Iterable&lt;CountryDto&gt; convertCountrysToDtos(Iterable&lt;Country&gt; countrys) {
+<b class="nc">&nbsp;        if (countrys == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        List&lt;CountryDto&gt; countryDtos = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (Country country : countrys) {</b>
+<b class="nc">&nbsp;            if (country != null) {</b>
+<b class="nc">&nbsp;                countryDtos.add(convertCountryToDto(country));</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return countryDtos;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

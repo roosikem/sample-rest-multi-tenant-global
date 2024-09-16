@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -41,15 +42,16 @@ public class AuthenticationController {
     public ResponseEntity<?> userInfo(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> user = authenticationService.userInfo(authHeader);
-        if (user.isPresent()) {
-            Optional<User> userInfos = userService.findUserById(user.get().getId());
-            if (userInfos.isPresent()) {
-                return ResponseEntity.ok(userInfos.map(userMapper::convertUserToDto));
+        if(Objects.nonNull(authHeader)) {
+            Optional<User> user = authenticationService.userInfo(authHeader);
+            if (user.isPresent()) {
+                Optional<User> userInfos = userService.findUserById(user.get().getId());
+                if (userInfos.isPresent()) {
+                    return ResponseEntity.ok(userInfos.map(userMapper::convertUserToDto));
+                }
             }
-        } else {
-            return ResponseEntity.status(401).body("Invalid user");
         }
+
         return ResponseEntity.status(401).body("Invalid user");
     }
 }

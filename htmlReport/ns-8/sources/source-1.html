@@ -1,0 +1,191 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > APIKeyController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: APIKeyController (com.lkup.accounts.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">APIKeyController</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (3/21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">APIKeyController$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (3/21)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.controller;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.APIKey;
+&nbsp;import com.lkup.accounts.dto.apikey.APIKeyDto;
+&nbsp;import com.lkup.accounts.dto.apikey.CreateAPIKeyDto;
+&nbsp;import com.lkup.accounts.dto.apikey.UpdateAPIKeyRequestDto;
+&nbsp;import com.lkup.accounts.mapper.APIKeyMapper;
+&nbsp;import com.lkup.accounts.service.APIKeyService;
+&nbsp;import com.lkup.accounts.utilities.PermissionConstants;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.net.URI;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/v1/keys&quot;)
+&nbsp;public class APIKeyController {
+&nbsp;
+&nbsp;    private final APIKeyService apiKeyService;
+&nbsp;    private final APIKeyMapper apiKeyMapper;
+&nbsp;
+<b class="fc">&nbsp;    public APIKeyController(APIKeyService apiKeyService, APIKeyMapper apiKeyMapper) {</b>
+<b class="fc">&nbsp;        this.apiKeyService = apiKeyService;</b>
+<b class="fc">&nbsp;        this.apiKeyMapper = apiKeyMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;APIKeyDto&gt; createAPIKey(@RequestBody CreateAPIKeyDto createAPIKeyDto) {
+<b class="nc">&nbsp;        APIKey apiKey = apiKeyMapper.convertCreateDtoToAPIKey(createAPIKeyDto);</b>
+<b class="nc">&nbsp;        APIKey createdAPIKey = apiKeyService.createAPIKey(apiKey);</b>
+<b class="nc">&nbsp;        APIKeyDto apiKeyDto = apiKeyMapper.convertAPIKeyToDto(createdAPIKey);</b>
+<b class="nc">&nbsp;        return ResponseEntity.created(URI.create(&quot;/api/v1/api-keys/&quot; + apiKeyDto.getId())).body(apiKeyDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_API_KEY + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;APIKeyDto&gt; getAPIKeyById(@PathVariable String id) {
+<b class="nc">&nbsp;        Optional&lt;APIKey&gt; apiKey = apiKeyService.findAPIKeyById(id);</b>
+<b class="nc">&nbsp;        return apiKey.map(apiKeyMapper::convertAPIKeyToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_API_KEY + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Iterable&lt;APIKeyDto&gt;&gt; getAllAPIKeys() {
+<b class="nc">&nbsp;        List&lt;APIKey&gt; apiKeys = apiKeyService.findAllAPIKeys();</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(apiKeyMapper.convertAPIKeysToDtos(apiKeys));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.UPDATE_API_KEY + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;APIKeyDto&gt; updateAPIKey(@PathVariable String id, @RequestBody UpdateAPIKeyRequestDto updateAPIKeyRequestDto) {
+<b class="nc">&nbsp;        updateAPIKeyRequestDto.setId(id);</b>
+<b class="nc">&nbsp;        Optional&lt;APIKey&gt; updatedAPIKey = apiKeyService.updateAPIKey(apiKeyMapper.convertUpdateDtoToAPIKey(updateAPIKeyRequestDto));</b>
+<b class="nc">&nbsp;        return updatedAPIKey.map(apiKeyMapper::convertAPIKeyToDto)</b>
+<b class="nc">&nbsp;                .map(ResponseEntity::ok)</b>
+<b class="nc">&nbsp;                .orElseGet(() -&gt; ResponseEntity.notFound().build());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.DELETE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Void&gt; deleteAPIKey(@PathVariable String id) {
+<b class="nc">&nbsp;        apiKeyService.deleteAPIKey(id);</b>
+<b class="nc">&nbsp;        return ResponseEntity.noContent().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/total&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyAuthority(&#39;&quot; + PermissionConstants.ADMINISTRATOR + &quot;&#39;, &#39;&quot; + PermissionConstants.VIEW_API_KEY + &quot;&#39;, &#39;&quot; + PermissionConstants.CREATE_API_KEY + &quot;&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;Long&gt; getTotalAPIKeys() {
+<b class="nc">&nbsp;        return ResponseEntity.ok(apiKeyService.getTotalAPIKeys());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

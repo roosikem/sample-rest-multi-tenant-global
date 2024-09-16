@@ -1,0 +1,152 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CreateEnvironmentDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.dto.environment</a>
+</div>
+
+<h1>Coverage Summary for Class: CreateEnvironmentDto (com.lkup.accounts.dto.environment)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CreateEnvironmentDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.dto.environment;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonProperty;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.Setter;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Getter
+<b class="nc">&nbsp;@Setter</b>
+<b class="nc">&nbsp;public class CreateEnvironmentDto {</b>
+<b class="nc">&nbsp;    private String id;</b>
+&nbsp;    @NotNull
+&nbsp;    @Schema(name = &quot;Environment Name&quot;, example = &quot;Dev&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private String name;</b>
+&nbsp;
+<b class="nc">&nbsp;    private List&lt;String&gt; apiKeys;</b>
+&nbsp;
+&nbsp;    @JsonProperty(&quot;appIds&quot;)
+&nbsp;    @NotNull
+&nbsp;    @Schema(name = &quot;App Ids&quot;, example = &quot;[1234,34534]&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private List&lt;String&gt; appIds;</b>
+&nbsp;
+&nbsp;    @Schema(name = &quot;App Ids&quot;, example = &quot;https://host.com/dev&quot;)
+<b class="nc">&nbsp;    private String hostUrl;</b>
+&nbsp;
+&nbsp;    @Schema(name = &quot;App Ids&quot;, example = &quot;https://auth.com/dev&quot;)
+<b class="nc">&nbsp;    private String authTokenUrl;</b>
+&nbsp;
+&nbsp;    @Schema(name = &quot;Default Config Template&quot;, example = &quot;{}&quot;)
+<b class="nc">&nbsp;    private String defaultConfigTemplate;</b>
+&nbsp;
+&nbsp;    @NotNull
+&nbsp;    @Schema(name = &quot;Environment Type&quot;, example = &quot;DEV, QA, PROD, SANDBOX, STAGING&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private String environmentType;</b>
+&nbsp;
+&nbsp;    @JsonProperty(&quot;organization&quot;)
+&nbsp;    @NotNull
+&nbsp;    @Schema(name = &quot;Organization ID&quot;, example = &quot;567899SD&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private String organizationId;</b>
+&nbsp;
+&nbsp;    @JsonProperty(&quot;team&quot;)
+&nbsp;    @NotNull
+&nbsp;    @Schema(name = &quot;Team ID&quot;, example = &quot;567899SD&quot;, requiredMode = Schema.RequiredMode.REQUIRED)
+<b class="nc">&nbsp;    private String teamId;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

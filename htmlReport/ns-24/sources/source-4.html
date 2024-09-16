@@ -1,0 +1,225 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > EnvironmentCustomRepositoryImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.repository.custom.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: EnvironmentCustomRepositoryImpl (com.lkup.accounts.repository.custom.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EnvironmentCustomRepositoryImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.4%
+  </span>
+  <span class="absValue">
+    (2/37)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">EnvironmentCustomRepositoryImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.4%
+  </span>
+  <span class="absValue">
+    (2/37)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.repository.custom.impl;
+&nbsp;
+&nbsp;import com.lkup.accounts.document.Environment;
+&nbsp;import com.lkup.accounts.repository.custom.EnvironmentCustomRepository;
+&nbsp;import com.lkup.accounts.repository.custom.QueryCriteria;
+&nbsp;import org.springframework.beans.factory.annotation.Qualifier;
+&nbsp;import org.springframework.data.mongodb.core.MongoTemplate;
+&nbsp;import org.springframework.data.mongodb.core.query.Criteria;
+&nbsp;import org.springframework.data.mongodb.core.query.Query;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public class EnvironmentCustomRepositoryImpl implements EnvironmentCustomRepository {
+&nbsp;
+&nbsp;    private final MongoTemplate mongoTemplate;
+&nbsp;
+<b class="fc">&nbsp;    public EnvironmentCustomRepositoryImpl(@Qualifier(&quot;tenantMongoTemplate&quot;) MongoTemplate mongoTemplate) {</b>
+<b class="fc">&nbsp;        this.mongoTemplate = mongoTemplate;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;Environment&gt; findByName(QueryCriteria queryCriteria, String name) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;name&quot;).is(name)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        Environment environment = mongoTemplate.findOne(query, Environment.class);</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(environment);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public &lt;S extends Environment&gt; S save(S entity) {
+<b class="nc">&nbsp;        return mongoTemplate.save(entity);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteById(QueryCriteria queryCriteria, String id) {
+<b class="nc">&nbsp;        Criteria criteria = null;</b>
+<b class="nc">&nbsp;        if(Objects.nonNull(queryCriteria.getTenantId()) &amp;&amp; Objects.nonNull(queryCriteria.getTeamId())) {</b>
+<b class="nc">&nbsp;            criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                    Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                    Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId()),</b>
+<b class="nc">&nbsp;                    Criteria.where(&quot;id&quot;).is(id)</b>
+&nbsp;            );
+&nbsp;        } else{
+<b class="nc">&nbsp;            criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                    Criteria.where(&quot;id&quot;).is(id)</b>
+&nbsp;            );
+&nbsp;        }
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        mongoTemplate.remove(query, Environment.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Optional&lt;Environment&gt; findById(QueryCriteria queryCriteria, String id) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;id&quot;).is(id)</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        Environment environment = mongoTemplate.findOne(query, Environment.class);</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(environment);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public long countAll(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId())</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        return mongoTemplate.count(query, Environment.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Environment&gt; findAll(QueryCriteria queryCriteria) {
+<b class="nc">&nbsp;        Criteria criteria = new Criteria().andOperator(</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;organization.id&quot;).is(queryCriteria.getTenantId()),</b>
+<b class="nc">&nbsp;                Criteria.where(&quot;team.id&quot;).is(queryCriteria.getTeamId())</b>
+&nbsp;        );
+<b class="nc">&nbsp;        Query query = new Query(criteria);</b>
+<b class="nc">&nbsp;        return mongoTemplate.find(query, Environment.class);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>

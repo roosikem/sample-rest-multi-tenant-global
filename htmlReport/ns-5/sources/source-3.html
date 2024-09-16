@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AwsProperties</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.lkup.accounts.config.s3</a>
+</div>
+
+<h1>Coverage Summary for Class: AwsProperties (com.lkup.accounts.config.s3)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AwsProperties</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    21.1%
+  </span>
+  <span class="absValue">
+    (4/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/150)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    21.1%
+  </span>
+  <span class="absValue">
+    (4/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.lkup.accounts.config.s3;
+&nbsp;
+&nbsp;import lombok.Data;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.boot.context.properties.ConfigurationProperties;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+<b class="pc">&nbsp;@Data</b>
+&nbsp;@Component
+&nbsp;@ConfigurationProperties(&quot;spring.cloud.aws&quot;)
+&nbsp;public class AwsProperties {
+&nbsp;    @Value(&quot;${spring.cloud.aws.region.static}&quot;)
+<b class="fc">&nbsp;    private String region;</b>
+&nbsp;    @Value(&quot;${spring.cloud.aws.credentials.access-key}&quot;)
+<b class="fc">&nbsp;    private String access;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${spring.cloud.aws.credentials.secret-key}&quot;)
+<b class="fc">&nbsp;    private String secret;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${spring.cloud.aws.s3.bucket}&quot;)
+<b class="nc">&nbsp;    private String bucket;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${spring.cloud.aws.cdn}&quot;)
+<b class="nc">&nbsp;    private String cdn;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${spring.cloud.aws.s3.bucket.directory}&quot;)
+<b class="nc">&nbsp;    private String directory;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.region.staging.static}&quot;)
+<b class="nc">&nbsp;    private String stagingRegion;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.credentials.staging.access-key}&quot;)
+<b class="nc">&nbsp;    private String stagingAccess;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.credentials.staging.secret-key}&quot;)
+<b class="nc">&nbsp;    private String stagingSecret;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.s3.staging.bucket}&quot;)
+<b class="nc">&nbsp;    private String stagingBucket;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.region.sandbox.static}&quot;)
+<b class="nc">&nbsp;    private String sandboxRegion;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.credentials.sandbox.access-key}&quot;)
+<b class="nc">&nbsp;    private String sandboxAccess;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.credentials.sandbox.secret-key}&quot;)
+<b class="nc">&nbsp;    private String sandboxSecret;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.s3.sandbox.bucket}&quot;)
+<b class="nc">&nbsp;    private String sandboxBucket;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.region.prod.static}&quot;)
+<b class="nc">&nbsp;    private String prodRegion;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.credentials.prod.access-key}&quot;)
+<b class="nc">&nbsp;    private String prodAccess;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.credentials.prod.secret-key}&quot;)
+<b class="nc">&nbsp;    private String prodSecret;</b>
+&nbsp;
+&nbsp;    @Value(&quot;${aws.s3.prod.bucket}&quot;)
+<b class="nc">&nbsp;    private String prodBucket;</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-09-16 22:54</div>
+</div>
+</body>
+</html>
