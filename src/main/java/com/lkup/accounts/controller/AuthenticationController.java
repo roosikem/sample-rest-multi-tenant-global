@@ -5,10 +5,12 @@ import com.lkup.accounts.mapper.UserMapper;
 import com.lkup.accounts.service.AuthenticationService;
 import com.lkup.accounts.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.AccountLockedException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,12 +31,15 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> login(@RequestParam("username") String username, @RequestParam("password") String password) {
-        Optional<String> token = authenticationService.authenticate(username, password);
-
-        if (token.isPresent()) {
-            return ResponseEntity.ok(Map.of("token", token.get()));
-        } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
+        try {
+            Optional<String> token = authenticationService.authenticate(username, password);
+            if (token.isPresent()) {
+                return ResponseEntity.ok(Map.of("token", token.get()));
+            } else {
+                return ResponseEntity.status(401).body("Invalid username or password");
+            }
+        } catch (AccountLockedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
 

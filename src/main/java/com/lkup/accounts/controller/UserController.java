@@ -9,6 +9,7 @@ import com.lkup.accounts.mapper.UserMapper;
 import com.lkup.accounts.service.RoleService;
 import com.lkup.accounts.service.UserService;
 import com.lkup.accounts.utilities.PermissionConstants;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -89,5 +90,27 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('" + PermissionConstants.ADMINISTRATOR + "', '" + PermissionConstants.CREATE_USER + "' ,'" + PermissionConstants.VIEW_USER + "')")
     public ResponseEntity<Long> getTotalUsers() {
         return ResponseEntity.ok(userService.getTotalUsers());
+    }
+
+    @PutMapping("/unlock/{username}")
+    public ResponseEntity<String> unlockUser(@PathVariable String username) {
+        Optional<User> optionalUser = null; //userService.findByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+
+        User user = optionalUser.get();
+
+        if (!user.isAccountLocked()) {
+            return ResponseEntity.ok("User is already unlocked.");
+        }
+
+        user.setAccountLocked(false);
+        user.setFailedLoginAttempts(0);
+        user.setLockTime(null);
+        //userRepository.save(user);
+
+        return ResponseEntity.ok("User has been unlocked successfully.");
     }
 }

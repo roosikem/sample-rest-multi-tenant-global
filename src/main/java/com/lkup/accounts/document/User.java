@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -28,6 +29,11 @@ public class User implements UserDetails {
     private String username;
 
     private String password;
+    private int failedLoginAttempts;
+
+    private boolean accountLocked;
+
+    private LocalDateTime lockTime;
 
     @DBRef
     private List<Country> countryAccess;
@@ -73,7 +79,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !this.accountLocked;
     }
 
     @Override

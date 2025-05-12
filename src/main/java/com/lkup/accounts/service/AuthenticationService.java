@@ -6,6 +6,7 @@ import com.lkup.accounts.repository.global.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountLockedException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,16 +23,42 @@ public class AuthenticationService {
         this.jwtUtil = jwtUtil;
     }
 
-    public Optional<String> authenticate(String username, String password) {
+    public Optional<String> authenticate(String username, String password) throws AccountLockedException {
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+
+            // If account is locked
+            if (user.isAccountLocked()) {
+                if (user.getLockTime() != null &&
+                    java.time.Duration.between(user.getLockTime(), java.time.LocalDateTime.now()).toMinutes() >= 15) {
+                    // Auto unlock
+                    user.setAccountLocked(false);
+                    user.setFailedLoginAttempts(0);
+                    user.setLockTime(null);
+                } else {
+                    // return Optional.empty(); // still locked
+                    throw new AccountLockedException("Your account is locked. Please contact admin to unlock.");
+                }
+            }
+
             if (passwordEncoder.matches(password, user.getPassword())) {
+                user.setFailedLoginAttempts(0);
+                userRepository.save(user);
                 String token = jwtUtil.issueToken(username, user.getRole());
                 return Optional.of(token);
+            } else {
+                int attempts = user.getFailedLoginAttempts() + 1;
+                user.setFailedLoginAttempts(attempts);
+                if (attempts >= 5) {
+                    user.setAccountLocked(true);
+                    user.setLockTime(java.time.LocalDateTime.now());
+                }
+                userRepository.save(user);
             }
         }
+
         return Optional.empty();
     }
 
