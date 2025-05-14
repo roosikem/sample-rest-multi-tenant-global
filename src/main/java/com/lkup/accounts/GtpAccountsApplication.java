@@ -71,7 +71,7 @@ public class GtpAccountsApplication {
         return args -> {
 
 
-            if (false) {
+            if (true) {
                 Country ie = new Country(defaultUUIDGeneratorService.generateId(), "Ireland", "IE");
                 countryRepository.deleteAll();
                 countryRepository.save(new Country(defaultUUIDGeneratorService.generateId(), "Ethiopia", "ET"));

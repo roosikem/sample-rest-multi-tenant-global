@@ -35,6 +35,8 @@ public class User implements UserDetails {
 
     private LocalDateTime lockTime;
 
+    private LocalDateTime lastLoginDate;
+
     @DBRef
     private List<Country> countryAccess;
 

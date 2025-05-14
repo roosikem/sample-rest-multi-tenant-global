@@ -29,6 +29,15 @@ public class AuthenticationService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
+            // Lock account if last login was over 90 days ago
+            if (user.getLastLoginDate() != null &&
+                java.time.Duration.between(user.getLastLoginDate(), java.time.LocalDateTime.now()).toDays() >= 90) {
+                user.setAccountLocked(true);
+                user.setLockTime(java.time.LocalDateTime.now());
+                userRepository.save(user);
+                throw new AccountLockedException("Your account is locked due to inactivity. Please contact admin.");
+            }
+
             // If account is locked
             if (user.isAccountLocked()) {
                 if (user.getLockTime() != null &&
@@ -45,6 +54,7 @@ public class AuthenticationService {
 
             if (passwordEncoder.matches(password, user.getPassword())) {
                 user.setFailedLoginAttempts(0);
+                user.setLastLoginDate(java.time.LocalDateTime.now());
                 userRepository.save(user);
                 String token = jwtUtil.issueToken(username, user.getRole());
                 return Optional.of(token);
