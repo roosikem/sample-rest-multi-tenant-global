@@ -5,6 +5,7 @@ import com.lkup.accounts.document.User;
 import com.lkup.accounts.repository.global.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.security.auth.login.AccountLockedException;
 import java.util.Objects;
@@ -16,6 +17,9 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtil;
+
+    @Value("${security.inactivity.lock.minutes:129600}") // 90 days default
+    private long inactivityLockMinutes;
 
     public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtil) {
         this.userRepository = userRepository;
@@ -29,9 +33,9 @@ public class AuthenticationService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            // Lock account if last login was over 90 days ago
+            // Lock account if last login was over inactivityLockMinutes ago
             if (user.getLastLoginDate() != null &&
-                java.time.Duration.between(user.getLastLoginDate(), java.time.LocalDateTime.now()).toDays() >= 90) {
+                java.time.Duration.between(user.getLastLoginDate(), java.time.LocalDateTime.now()).toMinutes() >= inactivityLockMinutes) {
                 user.setAccountLocked(true);
                 user.setLockTime(java.time.LocalDateTime.now());
                 userRepository.save(user);
