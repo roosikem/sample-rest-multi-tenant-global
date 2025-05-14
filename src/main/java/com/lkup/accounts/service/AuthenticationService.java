@@ -38,6 +38,7 @@ public class AuthenticationService {
                 java.time.Duration.between(user.getLastLoginDate(), java.time.LocalDateTime.now()).toMinutes() >= inactivityLockMinutes) {
                 user.setAccountLocked(true);
                 user.setLockTime(java.time.LocalDateTime.now());
+                user.setLockedReason("Account locked due to inactivity.");
                 userRepository.save(user);
                 throw new AccountLockedException("Your account is locked due to inactivity. Please contact admin.");
             }
@@ -68,6 +69,7 @@ public class AuthenticationService {
                 if (attempts >= 5) {
                     user.setAccountLocked(true);
                     user.setLockTime(java.time.LocalDateTime.now());
+                    user.setLockedReason("Account locked due to too many failed login attempts.");
                 }
                 userRepository.save(user);
             }

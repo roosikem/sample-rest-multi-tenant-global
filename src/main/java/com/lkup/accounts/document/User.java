@@ -33,6 +33,8 @@ public class User implements UserDetails {
 
     private boolean accountLocked;
 
+    private String lockedReason;
+
     private LocalDateTime lockTime;
 
     private LocalDateTime lastLoginDate;
